@@ -43,6 +43,7 @@ A análise pelo padrinho será feita da seguinte forma:
 Requisitos Obrigatórios:
 * Operações acima funcionando sem erros
 * Código válido, estruturado e organizado para que possamos testar sua aplicação
+* Testes unitários e de integração
 
 Utilização de Java11, spring boot, maven, suporte às IDEs IntelliJ e Eclipse o resto é por sua conta escolher.
 
@@ -50,4 +51,3 @@ Dicas:
 * Procure fazer uma entrega simples mas consistente, usando a experiência e conhecimento adquiridos durante sua carreira;
 * Não se preocupe em entregar algo extremamente completo ou rebuscado;
 * Dê o seu melhor;
-* Evite fazer Pull Request ou Fork deste repositório.
