@@ -14,15 +14,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name = "clientes")
 @Getter @Setter
+@EqualsAndHashCode
 public class Cliente {
 	
 	@Id
+	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cliente_id", nullable = false)
 	private Long id;
