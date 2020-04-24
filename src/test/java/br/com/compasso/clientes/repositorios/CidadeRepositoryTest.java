@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -113,7 +112,7 @@ class CidadeRepositoryTest {
 	void testBuscaCidadesPorNomeEstadoExistente() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
-		assertEquals(2, cidadeRepository.findByEstadoSigla("RS", Pageable.unpaged()).getContent().size());
+		assertTrue(cidadeRepository.findByNomeAndEstadoSigla("Porto Alegre", "RS").isPresent());
 	}
 	
 	/**
@@ -123,7 +122,7 @@ class CidadeRepositoryTest {
 	void testBuscaCidadesPorNomeEstadoNaoExistente() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
-		assertEquals(0, cidadeRepository.findByEstadoSigla("SP", Pageable.unpaged()).getContent().size());
+		assertTrue(cidadeRepository.findByNomeAndEstadoSigla("Sampa", "SP").isEmpty());
 	}
 	
 }

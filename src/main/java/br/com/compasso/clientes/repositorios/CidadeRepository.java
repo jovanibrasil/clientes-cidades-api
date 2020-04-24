@@ -2,8 +2,6 @@ package br.com.compasso.clientes.repositorios;
 
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +17,12 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	 */
 	Optional<Cidade> findByNome(String name);
 	/**
-	 * Busca cidades de um determinado estado.
+	 * Busca cidade de um determinado estado.
 	 * 
-	 * @param sigla
+	 * @param nome é o nome da cidade que se busca
+	 * @param sigla é a cigra que identifica o estado da cidade que se está buscando
 	 * @return
 	 */
-	Page<Cidade> findByEstadoSigla(String sigla, Pageable pageable);
+	Optional<Cidade> findByNomeAndEstadoSigla(String nome, String sigla);
 	
 }
