@@ -1,6 +1,7 @@
-package br.com.compasso.clientes.services;
+package br.com.compasso.clientes.services.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -8,10 +9,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
@@ -19,14 +19,13 @@ import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.repositorios.CidadeRepository;
+import br.com.compasso.clientes.services.impl.CidadeServiceImpl;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
-@ActiveProfiles("test")
 class CidadeServiceImplTest {
 	
-	@Autowired
-	private CidadeService cidadeService;
+	@InjectMocks
+	private CidadeServiceImpl cidadeService;
 	@MockBean
 	private CidadeRepository cidadeRepository;
 
@@ -35,6 +34,8 @@ class CidadeServiceImplTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
+		MockitoAnnotations.initMocks(this);
+        cidadeService = new CidadeServiceImpl(cidadeRepository);
 		estado = new Estado(0L, "RS");
 		cidade = new Cidade(0L, "Porto Alegre", estado);
 	}

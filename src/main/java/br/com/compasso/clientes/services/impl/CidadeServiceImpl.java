@@ -2,6 +2,8 @@ package br.com.compasso.clientes.services.impl;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
@@ -24,6 +26,7 @@ public class CidadeServiceImpl implements CidadeService {
 	 * nomes iguais em um mesmo estado.
 	 * 
 	 */
+	@Transactional
 	@Override
 	public Cidade salvaCidade(Cidade cidade) {
 		Optional<Cidade> optCidade = cidadeRepository.findByNomeAndEstadoSigla(cidade.getNome(), cidade.getEstado().getSigla());
@@ -41,6 +44,7 @@ public class CidadeServiceImpl implements CidadeService {
 	 * 
 	 * @param nome da cidade que se quer buscar
 	 */
+	@Transactional
 	@Override
 	public Cidade buscaPorNome(String nomeCidade) {
 		Optional<Cidade> optCidade = cidadeRepository.findByNome(nomeCidade);
