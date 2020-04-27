@@ -3,7 +3,7 @@ package br.com.compasso.clientes.repositorios;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ public class ClienteRepositoryTest {
 		cliente.setIdade(30);
 		cliente.setNomeCompleto("João Silva");
 		cliente.setSexo(Sexo.M);
-		cliente.setDataNascimento(LocalDateTime.now().minusYears(30L));
+		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
 	}
 	
 	/**

@@ -8,5 +8,6 @@ public interface CidadeService {
 	Cidade salvaCidade(Cidade cidade);
 	Cidade buscaPorNome(String nomeCidade);
 	Cidade buscaPorEstado(String nomeCidade, String siglaEstado);
+	Cidade buscaPorId(Long cidadeId);
 
 }

@@ -1,6 +1,7 @@
 package br.com.compasso.clientes.modelos;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.Period;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,11 +17,13 @@ import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "clientes")
 @Getter @Setter
+@NoArgsConstructor
 @EqualsAndHashCode
 public class Cliente {
 	
@@ -32,7 +35,7 @@ public class Cliente {
 	@Column(nullable = false, length = 50)
 	private String nomeCompleto;
 	@Column(nullable = false)
-	private LocalDateTime dataNascimento;
+	private LocalDate dataNascimento;
 	@Column(nullable = false)
 	private int idade;
 	@Enumerated(EnumType.STRING)
@@ -42,5 +45,15 @@ public class Cliente {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "cidade_id", referencedColumnName = "cidade_id", nullable = false)
 	private Cidade cidade;
+
+	public Cliente(Long id, String nomeCompleto, LocalDate dataNascimento, Sexo sexo, Cidade cidade) {
+		super();
+		this.id = id;
+		this.nomeCompleto = nomeCompleto;
+		this.dataNascimento = dataNascimento;
+		this.sexo = sexo;
+		this.cidade = cidade;
+		this.idade = Period.between(dataNascimento, LocalDate.now()).getYears();
+	}
 	
 }

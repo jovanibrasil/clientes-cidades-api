@@ -3,7 +3,7 @@ package br.com.compasso.clientes.services.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class ClienteServiceImplTest {
 		cliente.setIdade(30);
 		cliente.setNomeCompleto("João Silva");
 		cliente.setSexo(Sexo.M);
-		cliente.setDataNascimento(LocalDateTime.now().minusYears(30L));
+		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
 	}
 
 	/**
