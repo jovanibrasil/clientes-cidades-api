@@ -117,5 +117,28 @@ class CidadeServiceImplTest {
 			cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla());
 		});
 	}
+	
+	/**
+	 * Busca por id de uma cidade existente no sistema.
+	 * 
+	 */
+	@Test
+	void testBuscaPorId() {
+		when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.of(cidade));	
+		Cidade cidadeSalva = cidadeService.buscaPorId(cidade.getId());
+		assertEquals(cidade.getId(), cidadeSalva.getId());
+	}
+	
+	/**
+	 * Busca por id de uma cidade não existente no sistema.
+	 * 
+	 */
+	@Test
+	void testBuscaPorIdCidadeNaoExistente() {
+		when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());	
+		assertThrows(NotFoundException.class, () -> {
+			cidadeService.buscaPorId(cidade.getId());
+		});
+	}
 
 }

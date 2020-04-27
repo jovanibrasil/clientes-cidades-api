@@ -74,4 +74,19 @@ public class CidadeServiceImpl implements CidadeService {
 		return optCidade.get();
 	}
 
+	/**
+	 * Busca uma cidade pelo ID especificado.
+	 * 
+	 */
+	@Override
+	public Cidade buscaPorId(Long cidadeId) {
+		Optional<Cidade> optCidade = cidadeRepository.findById(cidadeId);
+		
+		if(optCidade.isEmpty()) {
+			throw new NotFoundException("Cidade não encontrada.");
+		}
+
+		return optCidade.get();
+	}
+
 }
