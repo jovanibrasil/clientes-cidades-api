@@ -2,6 +2,8 @@ package br.com.compasso.clientes.services.impl;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
@@ -24,9 +26,10 @@ public class CidadeServiceImpl implements CidadeService {
 	 * nomes iguais em um mesmo estado.
 	 * 
 	 */
+	@Transactional
 	@Override
 	public Cidade salvaCidade(Cidade cidade) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeAndEstadoSigla(cidade.getNome(), cidade.getEstado().getSigla());
+		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla());
 		
 		if(!optCidade.isEmpty()) {
 			throw new InvalidParameterException("Esta cidade já existe neste estado.");
@@ -41,9 +44,10 @@ public class CidadeServiceImpl implements CidadeService {
 	 * 
 	 * @param nome da cidade que se quer buscar
 	 */
+	@Transactional
 	@Override
 	public Cidade buscaPorNome(String nomeCidade) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNome(nomeCidade);
+		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
 		
 		if(optCidade.isEmpty()) {
 			throw new NotFoundException("Cidade não encontrada.");
@@ -61,7 +65,7 @@ public class CidadeServiceImpl implements CidadeService {
 	 */
 	@Override
 	public Cidade buscaPorEstado(String nomeCidade, String siglaEstado) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeAndEstadoSigla(nomeCidade, siglaEstado);
+		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(nomeCidade, siglaEstado);
 		
 		if(optCidade.isEmpty()) {
 			throw new NotFoundException("Cidade não encontrada.");
