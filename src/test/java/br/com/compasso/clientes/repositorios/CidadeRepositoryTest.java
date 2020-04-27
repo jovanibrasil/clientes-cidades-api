@@ -94,7 +94,7 @@ class CidadeRepositoryTest {
 	@Test
 	void testBuscaPorNomeCidadeExistente() {
 		cidade1 = cidadeRepository.save(cidade1);
-		assertTrue(cidadeRepository.findByNome(cidade1.getNome()).isPresent());
+		assertTrue(cidadeRepository.findByNomeIgnoreCase(cidade1.getNome()).isPresent());
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class CidadeRepositoryTest {
 	 */
 	@Test
 	void testBuscaPorNomeCidadeNaoExistente() {
-		assertFalse(cidadeRepository.findByNome("São Paulo").isPresent());
+		assertFalse(cidadeRepository.findByNomeIgnoreCase("São Paulo").isPresent());
 	}
 	
 	/**
@@ -112,7 +112,7 @@ class CidadeRepositoryTest {
 	void testBuscaCidadesPorNomeEstadoExistente() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
-		assertTrue(cidadeRepository.findByNomeAndEstadoSigla("Porto Alegre", "RS").isPresent());
+		assertTrue(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase("Porto Alegre", "RS").isPresent());
 	}
 	
 	/**
@@ -122,7 +122,7 @@ class CidadeRepositoryTest {
 	void testBuscaCidadesPorNomeEstadoNaoExistente() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
-		assertTrue(cidadeRepository.findByNomeAndEstadoSigla("Sampa", "SP").isEmpty());
+		assertTrue(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase("Sampa", "SP").isEmpty());
 	}
 	
 }

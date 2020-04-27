@@ -29,7 +29,7 @@ public class CidadeServiceImpl implements CidadeService {
 	@Transactional
 	@Override
 	public Cidade salvaCidade(Cidade cidade) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeAndEstadoSigla(cidade.getNome(), cidade.getEstado().getSigla());
+		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla());
 		
 		if(!optCidade.isEmpty()) {
 			throw new InvalidParameterException("Esta cidade já existe neste estado.");
@@ -47,7 +47,7 @@ public class CidadeServiceImpl implements CidadeService {
 	@Transactional
 	@Override
 	public Cidade buscaPorNome(String nomeCidade) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNome(nomeCidade);
+		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
 		
 		if(optCidade.isEmpty()) {
 			throw new NotFoundException("Cidade não encontrada.");
@@ -65,7 +65,7 @@ public class CidadeServiceImpl implements CidadeService {
 	 */
 	@Override
 	public Cidade buscaPorEstado(String nomeCidade, String siglaEstado) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeAndEstadoSigla(nomeCidade, siglaEstado);
+		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(nomeCidade, siglaEstado);
 		
 		if(optCidade.isEmpty()) {
 			throw new NotFoundException("Cidade não encontrada.");
