@@ -1,9 +1,16 @@
 package br.com.compasso.clientes.repositorios;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +37,9 @@ public class ClienteRepositoryTest {
 	private EstadoRepository estadoRepository;
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	private Cidade cidade;
 	private Estado estado;
@@ -76,5 +86,41 @@ public class ClienteRepositoryTest {
 		});
 	}
 	
+	/**
+	 * Testa a busca por ID de um cliente cadastrado no sistema.
+	 */
+	@Test
+	public void testBuscaClientePorId() {
+		cliente = clienteRepository.save(cliente);
+		Optional<Cliente> optClient = clienteRepository.findById(cliente.getId());
+		assertTrue(optClient.isPresent());
+		assertEquals(cliente.getId(), optClient.get().getId());
+	}
+	
+	/**
+	 * Testa a busca por Nome de um cliente cadastrado no sistema.
+	 */
+	@Test
+	public void testBuscaClientePorNome() {
+		cliente = clienteRepository.save(cliente);
+		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto());
+		assertEquals(1, clientes.size());
+	}
+	
+	/**
+	 * Testa a busca por Nome de um cliente cadastrado no sistema. Desta vez existem mais
+	 * de um registro para o nome informado.
+	 */
+	@Test
+	public void testBuscaClientePorNomeComMaisDeUmResultado() {
+		cliente.setNomeCompleto("Jovani");
+		cliente = clienteRepository.save(cliente);
+		entityManager.detach(cliente);
+		cliente.setId(null);
+		cliente.setNomeCompleto("Jovanio");
+		clienteRepository.save(cliente);
+		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase("Jovani");
+		assertEquals(2, clientes.size());
+	}
 	
 }

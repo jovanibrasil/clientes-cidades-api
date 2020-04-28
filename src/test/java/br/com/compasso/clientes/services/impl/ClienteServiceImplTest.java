@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.Estado;
@@ -56,7 +59,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void test() {
+	void testSalvaCliente() {
 		when(clientRepository.save(cliente)).then(new Answer<Cliente>() {
 			@Override
 			public Cliente answer(InvocationOnMock invocation) throws Throwable {
@@ -67,5 +70,51 @@ class ClienteServiceImplTest {
 		});
 		assertEquals(1L, clientService.salvaCliente(cliente).getId());
 	}
+	
+	/**
+	 * Testa busca de cliente por id.
+	 * 
+	 */
+	@Test
+	void testBuscaClientePorId() {
+		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
+		assertNotNull(clientService.buscaPorId(cliente.getId()));
+	}
+	
+	/**
+	 * Testa busca de cliente não existente por id.
+	 * 
+	 */
+	@Test
+	void testBuscaClienteNaoExistentePorId() {
+		when(clientRepository.findById(cliente.getId())).thenThrow(NotFoundException.class);
+		assertThrows(NotFoundException.class, () -> {
+			clientService.buscaPorId(cliente.getId());
+		}); 
+	}
 
+	/**
+	 * Testa busca de cliente por nome.
+	 * 
+	 */
+	@Test
+	void testBuscaClientePorNome() {
+		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
+			.thenReturn(Arrays.asList(cliente));
+		assertEquals(1, clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()).size());
+	}
+	
+	/**
+	 * Testa busca de cliente não existente por nome.
+	 * 
+	 */
+	@Test
+	void testBuscaClienteNaoExistentePorNome() {
+		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
+			.thenThrow(NotFoundException.class);
+		assertThrows(NotFoundException.class, () -> {
+			clientService.buscaPorNome(cliente.getNomeCompleto());
+		}); 
+	}	
+	
 }

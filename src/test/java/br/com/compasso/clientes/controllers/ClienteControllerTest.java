@@ -1,9 +1,12 @@
 package br.com.compasso.clientes.controllers;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+
 import static org.mockito.ArgumentMatchers.any;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import br.com.compasso.clientes.dtos.ClienteDto;
 import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
@@ -46,6 +50,7 @@ class ClienteControllerTest {
 	private MockMvc mvc;
 	
 	private ClienteForm clienteForm;
+	private ClienteDto clienteDto;
 	private Cliente cliente;
 	private Cidade cidade;
 	private Estado estado;
@@ -56,13 +61,21 @@ class ClienteControllerTest {
 		cidade = new Cidade(1L, "Porto Alegre", estado);
 		
 		LocalDate aniversario = LocalDate.now().minusYears(30);
-		cliente = new Cliente(2L, "João Silva", aniversario, Sexo.M, cidade);
+		cliente = new Cliente(2L, "João", aniversario, Sexo.M, cidade);
 		
 		clienteForm = new ClienteForm();
 		clienteForm.setCidadeId(cidade.getId());
 		clienteForm.setDataNascimento(cliente.getDataNascimento());
 		clienteForm.setSexo(cliente.getSexo());
 		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
+	
+		clienteDto = new ClienteDto();
+		clienteDto.setDataNascimento(cliente.getDataNascimento());
+		clienteDto.setId(cliente.getId());
+		clienteDto.setIdade(cliente.getIdade());
+		clienteDto.setIdCidade(cidade.getId());
+		clienteDto.setNomeCompleto(cliente.getNomeCompleto());
+		clienteDto.setSexo(cliente.getSexo());
 	}
 
 	/**
@@ -151,7 +164,59 @@ class ClienteControllerTest {
 				.content(asJsonString(clienteForm)))		
 				.andExpect(status().isBadRequest());
 	}
+	
+	/**
+	 * Testa a busca por id de um cliente.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaClientePorId() throws Exception {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
+		when(clienteService.buscaPorId(cliente.getId())).thenReturn(cliente);
+		mvc.perform(MockMvcRequestBuilders.get("/clientes?id=" + cliente.getId()))		
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isNotEmpty());
+	}
+	
+	/**
+	 * Testa a busca por id de um cliente que não existe.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaClienteNaoExistentePorId() throws Exception {
+		when(clienteService.buscaPorId(cliente.getId())).thenThrow(NotFoundException.class);
+		mvc.perform(MockMvcRequestBuilders.get("/clientes?id=" + cliente.getId()))		
+				.andExpect(status().isNotFound());
+	}
 
+	/**
+	 * Testa a busca por id de um cliente.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaClientePorNome() throws Exception {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
+		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(cliente));
+		mvc.perform(MockMvcRequestBuilders.get("/clientes?nome=" + cliente.getNomeCompleto()))		
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isNotEmpty());
+	}
+	
+	/**
+	 * Testa a busca por id de um cliente que não existe.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaClienteNaoExistentePorNome() throws Exception {
+		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenThrow(NotFoundException.class);
+		mvc.perform(MockMvcRequestBuilders.get("/clientes?nome=" + cliente.getNomeCompleto()))		
+				.andExpect(status().isNotFound());
+	}
+	
 	public static String asJsonString(final Object obj) {
 		try {
 			final ObjectMapper mapper = new ObjectMapper();
@@ -162,5 +227,7 @@ class ClienteControllerTest {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
 	
 }
