@@ -7,7 +7,7 @@ import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.services.CidadeService;
 
-public abstract class ClienteMapperAdapter implements ClienteMapper {
+public abstract class ClienteMapperDecorator implements ClienteMapper {
 
 	private ClienteMapper clientMapper;
 	private CidadeService cidadeService;

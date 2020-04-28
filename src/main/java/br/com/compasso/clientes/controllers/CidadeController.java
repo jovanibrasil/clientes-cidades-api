@@ -18,19 +18,16 @@ import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.services.CidadeService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/cidades")
+@RequiredArgsConstructor
 public class CidadeController {
 
 	private final CidadeService cidadeService;
 	private final CidadeMapper cidadeMapper;
-	
-	public CidadeController(CidadeService cidadeService, CidadeMapper cidadeMapper) {
-		this.cidadeService = cidadeService;
-		this.cidadeMapper = cidadeMapper;
-	}
-	
+		
 	/**
 	 * Cria uma cidade no sistema. 
 	 * 
