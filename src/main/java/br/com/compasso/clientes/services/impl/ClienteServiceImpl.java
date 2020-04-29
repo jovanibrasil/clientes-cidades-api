@@ -3,6 +3,8 @@ package br.com.compasso.clientes.services.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import br.com.compasso.clientes.exceptions.NotFoundException;
@@ -54,6 +56,40 @@ public class ClienteServiceImpl implements ClienteService {
 			throw new NotFoundException("Nenhum cliente encontrado com o nome informado");
 		}
 		return clientes;
+	}
+
+	/**
+	 * Faz a alteração do cliente. No momento é possível modificar apenas o nome do cliente.
+	 */
+	@Transactional
+	@Override
+	public Cliente alteraCliente(Cliente cliente) {
+		Optional<Cliente> optCliente = clienteRepository.findById(cliente.getId());
+		
+		if(optCliente.isEmpty()) {
+			throw new NotFoundException("Cliente não encontrado");
+		}
+		
+		Cliente clienteSalvo = optCliente.get();
+		clienteSalvo.setNomeCompleto(cliente.getNomeCompleto());
+		
+		return clienteSalvo;
+	}
+
+	/**
+	 * Remove um cliente pelo id específico.
+	 * 
+	 */
+	@Transactional
+	@Override
+	public void removeCliente(Long clienteId) {
+		Optional<Cliente> optCliente = clienteRepository.findById(clienteId);
+		
+		if(optCliente.isEmpty()) {
+			throw new NotFoundException("Cliente não encontrado");
+		}
+		
+		clienteRepository.delete(optCliente.get());
 	}
 	
 }

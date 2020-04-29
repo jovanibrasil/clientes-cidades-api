@@ -1,6 +1,7 @@
 package br.com.compasso.clientes.services.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -115,6 +116,58 @@ class ClienteServiceImplTest {
 		assertThrows(NotFoundException.class, () -> {
 			clientService.buscaPorNome(cliente.getNomeCompleto());
 		}); 
-	}	
+	}
+	
+	/**
+	 * Testa remoção de cliente por id.
+	 * 
+	 */
+	@Test
+	void testDeleteClientePorId() {
+		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
+		doNothing().when(clientRepository).delete(cliente);
+	}
+	
+	/**
+	 * Testa remoção de cliente não existente por id.
+	 * 
+	 */
+	@Test
+	void testDeleteClienteNaoExistentePorId() {
+		when(clientRepository.findById(cliente.getId())).thenThrow(NotFoundException.class);
+		assertThrows(NotFoundException.class, () -> {
+			clientService.removeCliente(cliente.getId());
+		}); 
+	}
+	
+	/**
+	 * Testa alteração de cliente por id.
+	 * 
+	 */
+	@Test
+	void testAlteraClientePorId() {
+		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
+		Cliente clienteAlteracao = new Cliente();
+		clienteAlteracao.setId(cliente.getId());
+		String nome = "Jovanio";
+		clienteAlteracao.setNomeCompleto(nome);
+		Cliente cliente = clientService.alteraCliente(clienteAlteracao);
+		assertEquals(nome, cliente.getNomeCompleto());
+	}
+	
+	/**
+	 * Testa alteração de cliente não existente por id.
+	 * 
+	 */
+	@Test
+	void testAlteraClienteNaoExistentePorId() {
+		when(clientRepository.findById(cliente.getId())).thenThrow(NotFoundException.class);
+		assertThrows(NotFoundException.class, () -> {
+			Cliente clienteAlteracao = new Cliente();
+			clienteAlteracao.setId(cliente.getId());
+			clienteAlteracao.setNomeCompleto("Jovanir");
+			clientService.alteraCliente(clienteAlteracao);
+		}); 
+	}
 	
 }

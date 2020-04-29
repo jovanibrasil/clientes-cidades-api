@@ -9,5 +9,7 @@ public interface ClienteService {
 	Cliente salvaCliente(Cliente cliente);
 	Cliente buscaPorId(Long clienteId);
 	List<Cliente> buscaPorNome(String nome);
+	Cliente alteraCliente(Cliente cliente);
+	void removeCliente(Long clienteId);
 	
 }
