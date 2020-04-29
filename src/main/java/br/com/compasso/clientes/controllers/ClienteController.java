@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cliente;
@@ -77,6 +81,34 @@ public class ClienteController {
 				.stream()
 				.map(cliente -> clienteMapper.clienteToClienteDto(cliente))
 				.collect(Collectors.toList()));
+	}
+	
+	/**
+	 * Remove o cliente com Id especificado.
+	 * 
+	 * @param clienteId
+	 * @return
+	 */
+	@DeleteMapping("/{clienteId}")
+	public ResponseEntity<?> removeCliente(@PathVariable Long clienteId){
+		clienteService.removeCliente(clienteId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	/**
+	 * Faz o patch do cliente. Neste momento é apenas permitido o patch do nome do cliente.
+	 * 
+	 * @param clienteId
+	 * @param atualizacaoClienteForm
+	 * @return
+	 */
+	@PatchMapping("/{clienteId}")
+	public ResponseEntity<?> atualizaCliente(@PathVariable Long clienteId, 
+			@RequestBody @Valid AtualizacaoClienteForm atualizacaoClienteForm){
+		Cliente cliente = clienteMapper.atualizacaoClienteFormToCliente(atualizacaoClienteForm);
+		cliente.setId(clienteId);
+		cliente = clienteService.alteraCliente(cliente);
+		return ResponseEntity.ok(clienteMapper.clienteToClienteDto(cliente));
 	}
 	
 }
