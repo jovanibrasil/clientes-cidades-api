@@ -147,6 +147,12 @@ class ClienteServiceImplTest {
 	@Test
 	void testAlteraClientePorId() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
+		when(clientRepository.save(cliente)).then(new Answer<Cliente>() {
+			@Override
+			public Cliente answer(InvocationOnMock invocation) throws Throwable {
+				return (Cliente) invocation.getArgument(0);
+			}
+		});
 		Cliente clienteAlteracao = new Cliente();
 		clienteAlteracao.setId(cliente.getId());
 		String nome = "Jovanio";

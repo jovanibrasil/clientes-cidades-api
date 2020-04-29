@@ -73,7 +73,7 @@ public class ClienteServiceImpl implements ClienteService {
 		Cliente clienteSalvo = optCliente.get();
 		clienteSalvo.setNomeCompleto(cliente.getNomeCompleto());
 		
-		return clienteSalvo;
+		return clienteRepository.save(clienteSalvo);
 	}
 
 	/**
