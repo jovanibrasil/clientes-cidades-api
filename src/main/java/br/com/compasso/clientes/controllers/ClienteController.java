@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,6 +26,10 @@ import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.services.ClienteService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,14 +40,12 @@ public class ClienteController {
 	private final ClienteService clienteService;
 	private final ClienteMapper clienteMapper;
 	
-	/**
-	 * Salva um cliente no sistema.
-	 * 
-	 * @param clienteForm
-	 * @return
-	 */
+	@ApiOperation(value = "Cria cliente.", notes = "Cria um cliente no sistema. ")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "Criado com sucesso.", responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),
+			@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@PostMapping
-	public ResponseEntity<?> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
+	public ResponseEntity<Void> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
 		Cliente clienteSalvo = clienteService.salvaCliente(clienteMapper.clienteFormToCliente(clienteForm));
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
@@ -51,64 +55,59 @@ public class ClienteController {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	/**
-	 * Busca cliente por ID.
-	 * 
-	 * @param id
-	 * @return
-	 */
+	@ApiOperation(value = "Busca cliente por ID.",
+			notes = "Busca cliente pelo seu identificador (ID).")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Cliente encontrado.", response = ClienteDto.class),
+			@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@GetMapping(params = "id")
-	public ResponseEntity<ClienteDto> buscaClientePorId(@RequestParam Long id){
-		return ResponseEntity.ok(clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id)));
+	@ResponseStatus(value = HttpStatus.OK)
+	public ClienteDto buscaClientePorId(@RequestParam Long id){
+		return clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id));
 	}
 	
-	/**
-	 * Busca cliente por nome. Como podem haver clientes com o mesmo nome, o retorno é uma lista. 
-	 * O matching de comparação é feito de forma parcial. Exemplo: nome buscado é "Jovani". Serão
-	 * retornados todos os cliente com nome "Jovani", "Jovanir", "Jovanilson", etc. Para buscar
-	 * apenas pelo nome exato basta adicionar um espaço ao fim do nome, por exemplo "Jovani ".
-	 * 
-	 * A busca é feita no nome completo, então você pode busca pelo nome e sobrenome. Um exemplo
-	 * seria a busca por "Jovani Brasil", que retornaria o registro dos clientes que possuem 
-	 * nome "Jovani Brasil".
-	 * 
-	 * @param nome
-	 * @return
-	 */
+	@ApiOperation(value = "Busca cliente por nome.",
+			notes = "Busca cliente por nome. Como podem haver clientes com o mesmo nome, o retorno é uma lista. "
+					+ "O matching de comparação é feito de forma parcial. Exemplo: nome buscado é \"Jovani\". "
+					+ "Serão retornados todos os cliente com nome \"Jovani\", \"Jovanir\", \"Jovanilson\", etc. "
+					+ "Para buscar apenas pelo nome exato basta adicionar um espaço ao fim do nome, por exemplo \"Jovani \". "
+					+ "A busca é feita no nome completo, então você pode busca pelo nome e sobrenome. "
+					+ "Um exemplo seria a busca por \"Jovani Brasil\", que retornaria o registro dos "
+					+ "clientes que possuem nome \"Jovani Brasil\".")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Cliente encontrado.", response = ClienteDto.class, responseContainer = "List"),
+		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@GetMapping(params = "nome")
-	public ResponseEntity<List<ClienteDto>> buscaClientePorNome(@RequestParam String nome){
-		return ResponseEntity.ok(clienteService.buscaPorNome(nome)
+	@ResponseStatus(value = HttpStatus.OK)
+	public List<ClienteDto> buscaClientePorNome(@RequestParam String nome){
+		return clienteService.buscaPorNome(nome)
 				.stream()
 				.map(cliente -> clienteMapper.clienteToClienteDto(cliente))
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList());
 	}
 	
-	/**
-	 * Remove o cliente com Id especificado.
-	 * 
-	 * @param clienteId
-	 * @return
-	 */
+	@ApiOperation(value = "Remove cliente", notes = "Remove o cliente com Id especificado.")
+	@ApiResponses({
+		@ApiResponse(code = 204, message = "Cliente removido com sucesso."),
+		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@DeleteMapping("/{clienteId}")
-	public ResponseEntity<?> removeCliente(@PathVariable Long clienteId){
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void removeCliente(@PathVariable Long clienteId){
 		clienteService.removeCliente(clienteId);
-		return ResponseEntity.noContent().build();
 	}
 	
-	/**
-	 * Faz o patch do cliente. Neste momento é apenas permitido o patch do nome do cliente.
-	 * 
-	 * @param clienteId
-	 * @param atualizacaoClienteForm
-	 * @return
-	 */
+	@ApiOperation(value = "Faz o patch do cliente", notes = "Faz o patch do cliente. Neste momento é apenas permitido o patch do nome do cliente.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Cliente atualizado com sucesso.", response = ClienteDto.class),
+		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@PatchMapping("/{clienteId}")
-	public ResponseEntity<?> atualizaCliente(@PathVariable Long clienteId, 
+	@ResponseStatus(value = HttpStatus.OK)
+	public ClienteDto atualizaCliente(@PathVariable Long clienteId, 
 			@RequestBody @Valid AtualizacaoClienteForm atualizacaoClienteForm){
 		Cliente cliente = clienteMapper.atualizacaoClienteFormToCliente(atualizacaoClienteForm);
 		cliente.setId(clienteId);
 		cliente = clienteService.alteraCliente(cliente);
-		return ResponseEntity.ok(clienteMapper.clienteToClienteDto(cliente));
+		return clienteMapper.clienteToClienteDto(cliente);
 	}
 	
 }
