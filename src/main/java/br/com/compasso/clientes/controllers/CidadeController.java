@@ -4,12 +4,14 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,6 +20,10 @@ import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.services.CidadeService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,15 +33,14 @@ public class CidadeController {
 
 	private final CidadeService cidadeService;
 	private final CidadeMapper cidadeMapper;
-		
-	/**
-	 * Cria uma cidade no sistema. 
-	 * 
-	 * @param cidadeForm
-	 * @return
-	 */
+	
+	
+	@ApiOperation(value = "Cria uma cidade.", notes = "Cria uma cidade no sistema. Não existem cidades com mesmo nome em um mesmo estado.")
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "Cidade criada com sucesso.",  responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),
+		@ApiResponse(code = 404, message = "Cidade não encontrada.")})
 	@PostMapping
-	public ResponseEntity<?> criaCidade(@RequestBody @Valid CidadeForm cidadeForm) {
+	public ResponseEntity<Void> criaCidade(@RequestBody @Valid CidadeForm cidadeForm) {
 		Cidade cidade = cidadeMapper.cidadeFormToCidade(cidadeForm);
 		cidade = cidadeService.salvaCidade(cidade);
 		URI uri = ServletUriComponentsBuilder
@@ -46,29 +51,24 @@ public class CidadeController {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	/**
-	 * Busca uma cidade por nome.
-	 * 
-	 * @param nomeCidade
-	 * @return
-	 */
+	@ApiOperation(value = "Busca cidade por nome.",	notes = "Busca cidade por nome. Podem várias cidades com mesmo nome, desde que em estados diferentes.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Cidade encontrada.", response = CidadeDto.class, responseContainer = "List"),
+		@ApiResponse(code = 404, message = "Cidade não encontrada.")})
+	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping("/{nomeCidade}")
-	public ResponseEntity<CidadeDto> buscaCidadePorNome(@PathVariable String nomeCidade) {
-		return ResponseEntity.ok(cidadeMapper
-				.cidadeToCidadeDto(cidadeService.buscaPorNome(nomeCidade)));
+	public CidadeDto buscaCidadePorNome(@PathVariable String nomeCidade) {
+		return cidadeMapper.cidadeToCidadeDto(cidadeService.buscaPorNome(nomeCidade));
 	}
 	
-	/**
-	 * Busca uma cidade por nome dentro de um estado específico.
-	 * 
-	 * @param estadoSigla
-	 * @param nomeCidade
-	 * @return
-	 */
+	@ApiOperation(value = "Busca cidade por nome e estado.", notes = "Busca por uma determinada cidade em um determinado estado. Uma cidade tem nome único em um estado.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Cidade encontrada.", response = CidadeDto.class),
+		@ApiResponse(code = 404, message = "Cidade não encontrada.")})
+	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping("/{nomeCidade}/{estadoSigla}")
-	public ResponseEntity<CidadeDto> buscaCidadePorEstado(@PathVariable String estadoSigla, @PathVariable String nomeCidade) {
-		return ResponseEntity.ok(cidadeMapper
-				.cidadeToCidadeDto(cidadeService.buscaPorEstado(nomeCidade, estadoSigla)));
+	public CidadeDto buscaCidadePorEstado(@PathVariable String estadoSigla, @PathVariable String nomeCidade) {
+		return cidadeMapper.cidadeToCidadeDto(cidadeService.buscaPorEstado(nomeCidade, estadoSigla));
 	}
 	
 }
