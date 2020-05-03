@@ -1,5 +1,6 @@
 package br.com.compasso.clientes.repositorios;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	 * @param name
 	 * @return
 	 */
-	Optional<Cidade> findByNomeIgnoreCase(String name);
+	List<Cidade> findByNomeIgnoreCase(String name);
 	/**
 	 * Busca cidade de um determinado estado.
 	 * 

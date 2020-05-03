@@ -1,7 +1,6 @@
 package br.com.compasso.clientes.controllers;
 
 import java.net.URI;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -54,20 +53,9 @@ public class ClienteController {
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	
-	@ApiOperation(value = "Busca cliente por ID.",
-			notes = "Busca cliente pelo seu identificador (ID).")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Cliente encontrado.", response = ClienteDto.class),
-			@ApiResponse(code = 404, message = "Cliente não encontrado.")})
-	@GetMapping(params = "id")
-	@ResponseStatus(value = HttpStatus.OK)
-	public ClienteDto buscaClientePorId(@RequestParam Long id){
-		return clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id));
-	}
-	
-	@ApiOperation(value = "Busca cliente por nome.",
-			notes = "Busca cliente por nome. Como podem haver clientes com o mesmo nome, o retorno é uma lista. "
+		
+	@ApiOperation(value = "Busca cliente por identificador (ID) ou nome.",
+			notes = "Na busca de cliente por nome, Como podem haver clientes com o mesmo nome, o retorno é uma lista. "
 					+ "O matching de comparação é feito de forma parcial. Exemplo: nome buscado é \"Jovani\". "
 					+ "Serão retornados todos os cliente com nome \"Jovani\", \"Jovanir\", \"Jovanilson\", etc. "
 					+ "Para buscar apenas pelo nome exato basta adicionar um espaço ao fim do nome, por exemplo \"Jovani \". "
@@ -75,15 +63,20 @@ public class ClienteController {
 					+ "Um exemplo seria a busca por \"Jovani Brasil\", que retornaria o registro dos "
 					+ "clientes que possuem nome \"Jovani Brasil\".")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "Cliente encontrado.", response = ClienteDto.class, responseContainer = "List"),
+		@ApiResponse(code = 200, message = "Cliente encontrado.", response = Object.class),
 		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
-	@GetMapping(params = "nome")
-	@ResponseStatus(value = HttpStatus.OK)
-	public List<ClienteDto> buscaClientePorNome(@RequestParam String nome){
-		return clienteService.buscaPorNome(nome)
-				.stream()
-				.map(cliente -> clienteMapper.clienteToClienteDto(cliente))
-				.collect(Collectors.toList());
+	@GetMapping
+	public ResponseEntity<?> buscaClientePorNome(@RequestParam(required = false) String nome, 
+			@RequestParam(required = false) Long id){
+		if(id != null) {
+			return ResponseEntity.ok(clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id)));
+		} else if (nome != null) {
+			return ResponseEntity.ok(clienteService.buscaPorNome(nome)
+					.stream()
+					.map(cliente -> clienteMapper.clienteToClienteDto(cliente))
+					.collect(Collectors.toList()));
+		}
+		return ResponseEntity.badRequest().build();
 	}
 	
 	@ApiOperation(value = "Remove cliente", notes = "Remove o cliente com Id especificado.")

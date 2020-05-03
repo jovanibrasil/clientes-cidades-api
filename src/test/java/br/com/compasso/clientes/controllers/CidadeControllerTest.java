@@ -4,6 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,7 +114,7 @@ class CidadeControllerTest {
 	 */
 	@Test
 	void testBuscaCidadePorNome() throws Exception {
-		when(cidadeService.buscaPorNome(cidade.getNome())).thenReturn(cidade);
+		when(cidadeService.buscaPorNome(cidade.getNome())).thenReturn(Arrays.asList(cidade));
 		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
 		mvc.perform(MockMvcRequestBuilders.get("/cidades/" + cidade.getNome())
 				.contentType(MediaType.APPLICATION_JSON))		

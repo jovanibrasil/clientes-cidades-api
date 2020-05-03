@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -77,9 +79,9 @@ class CidadeServiceImplTest {
 	 */
 	@Test
 	void testBuscaPorNome() {
-		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Optional.of(cidade));	
-		Cidade cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
-		assertEquals(cidade.getNome(), cidadeSalva.getNome());
+		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList(cidade));	
+		List<Cidade> cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
+		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
 	}
 	
 	/**
@@ -88,7 +90,7 @@ class CidadeServiceImplTest {
 	 */
 	@Test
 	void testBuscaPorNomeNaoExistente() {
-		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Optional.empty());	
+		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList());	
 		assertThrows(NotFoundException.class, () -> {
 			cidadeService.buscaPorNome(cidade.getNome());
 		});

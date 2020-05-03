@@ -1,5 +1,6 @@
 package br.com.compasso.clientes.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -46,14 +47,14 @@ public class CidadeServiceImpl implements CidadeService {
 	 */
 	@Transactional
 	@Override
-	public Cidade buscaPorNome(String nomeCidade) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
+	public List<Cidade> buscaPorNome(String nomeCidade) {
+		List<Cidade> cidades = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
 		
-		if(optCidade.isEmpty()) {
+		if(cidades.size() == 0) {
 			throw new NotFoundException("Cidade não encontrada.");
 		}
 
-		return optCidade.get();
+		return cidades;
 	}
 
 	/**

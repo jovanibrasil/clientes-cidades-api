@@ -94,7 +94,7 @@ class CidadeRepositoryTest {
 	@Test
 	void testBuscaPorNomeCidadeExistente() {
 		cidade1 = cidadeRepository.save(cidade1);
-		assertTrue(cidadeRepository.findByNomeIgnoreCase(cidade1.getNome()).isPresent());
+		assertEquals(1, cidadeRepository.findByNomeIgnoreCase(cidade1.getNome()).size());
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class CidadeRepositoryTest {
 	 */
 	@Test
 	void testBuscaPorNomeCidadeNaoExistente() {
-		assertFalse(cidadeRepository.findByNomeIgnoreCase("São Paulo").isPresent());
+		assertEquals(0, cidadeRepository.findByNomeIgnoreCase("São Paulo").size());
 	}
 	
 	/**

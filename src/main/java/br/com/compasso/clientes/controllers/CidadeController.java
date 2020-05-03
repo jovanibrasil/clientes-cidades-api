@@ -1,6 +1,8 @@
 package br.com.compasso.clientes.controllers;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -57,8 +59,10 @@ public class CidadeController {
 		@ApiResponse(code = 404, message = "Cidade não encontrada.")})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping("/{nomeCidade}")
-	public CidadeDto buscaCidadePorNome(@PathVariable String nomeCidade) {
-		return cidadeMapper.cidadeToCidadeDto(cidadeService.buscaPorNome(nomeCidade));
+	public List<CidadeDto> buscaCidadePorNome(@PathVariable String nomeCidade) {
+		return cidadeService.buscaPorNome(nomeCidade).stream()
+					.map(cidadeMapper::cidadeToCidadeDto)
+					.collect(Collectors.toList());
 	}
 	
 	@ApiOperation(value = "Busca cidade por nome e estado.", notes = "Busca por uma determinada cidade em um determinado estado. Uma cidade tem nome único em um estado.")
