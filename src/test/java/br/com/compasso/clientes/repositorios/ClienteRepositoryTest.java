@@ -2,7 +2,6 @@ package br.com.compasso.clientes.repositorios;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -56,7 +54,6 @@ public class ClienteRepositoryTest {
 		cidade = cidadeRepository.save(cidade);
 		cliente = new Cliente();
 		cliente.setCidade(cidade);
-		cliente.setIdade(30);
 		cliente.setNomeCompleto("João Silva");
 		cliente.setSexo(Sexo.M);
 		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
@@ -73,19 +70,7 @@ public class ClienteRepositoryTest {
 		assertNotNull(cliente.getCidade());
 		assertNotNull(cliente.getDataNascimento());
 	}
-	
-	/**
-	 * Testa salvamento de um cliente nula.
-	 * 
-	 */
-	@Test
-	public void testSalvaClienteComCidadeNull() {
-		cliente.setCidade(null);
-		assertThrows(DataIntegrityViolationException.class, () -> {
-			clienteRepository.save(cliente);
-		});
-	}
-	
+		
 	/**
 	 * Testa a busca por ID de um cliente cadastrado no sistema.
 	 */
@@ -113,13 +98,14 @@ public class ClienteRepositoryTest {
 	 */
 	@Test
 	public void testBuscaClientePorNomeComMaisDeUmResultado() {
-		cliente.setNomeCompleto("Jovani");
 		cliente = clienteRepository.save(cliente);
-		entityManager.detach(cliente);
-		cliente.setId(null);
-		cliente.setNomeCompleto("Jovanio");
-		clienteRepository.save(cliente);
-		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase("Jovani");
+		Cliente cliente2 = new Cliente();
+		cliente2.setCidade(cidade);
+		cliente2.setDataNascimento(LocalDate.now().minusYears(15));
+		cliente2.setNomeCompleto("Maria Silva");
+		cliente2.setSexo(Sexo.F);
+		clienteRepository.save(cliente2);
+		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase("Silva");
 		assertEquals(2, clientes.size());
 	}
 	

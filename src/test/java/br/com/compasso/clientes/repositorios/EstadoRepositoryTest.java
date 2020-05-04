@@ -55,18 +55,7 @@ class EstadoRepositoryTest {
 		estado = estadoRepository.save(estado);
 		assertNotNull(estado.getId());
 	}
-	
-	/**
-	 * Testa salvar estado com sigla nula.
-	 */
-	@Test
-	void testSalvaEstadoSiglaNula() {
-		assertThrows(DataIntegrityViolationException.class, () -> {
-			estado.setSigla(null);
-			estadoRepository.save(estado);	
-		});
-	}
-	
+		
 	/**
 	 * Testa salvar estado com sigla com mais caracteres que o permitido.
 	 */

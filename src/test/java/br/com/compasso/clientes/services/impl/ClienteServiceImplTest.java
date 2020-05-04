@@ -48,8 +48,8 @@ class ClienteServiceImplTest {
 		cidade.setNome("Porto Alegre");
 		cidade.setEstado(estado);
 		cliente = new Cliente();
+		cliente.setId(1L);
 		cliente.setCidade(cidade);
-		cliente.setIdade(30);
 		cliente.setNomeCompleto("João Silva");
 		cliente.setSexo(Sexo.M);
 		cliente.setDataNascimento(LocalDate.now().minusYears(30L));

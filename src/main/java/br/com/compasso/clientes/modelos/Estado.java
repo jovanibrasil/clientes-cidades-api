@@ -7,26 +7,45 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "estados")
-@Getter @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class Estado {
+public final class Estado {
 	
 	@Id
-	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "estado_id", nullable = false)
 	private Long id;
 	@Column(nullable = false, length = 2)
 	private String sigla;
+
+	public Estado(Long id, String sigla) {
+		setId(id);
+		setSigla(sigla);
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public String getSigla() {
+		return sigla;
+	}
+	
+	public void setId(Long id) {
+		if(id == null) {
+			throw new IllegalArgumentException("Id não pode ser nulo.");
+		}
+		this.id = id;
+	}
+	
+	public void setSigla(String sigla) {
+		if(sigla == null) {
+			throw new IllegalArgumentException("Sigla não pode ser nula.");
+		}
+		this.sigla = sigla;
+	}
 	
 }
