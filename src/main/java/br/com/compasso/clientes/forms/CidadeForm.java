@@ -3,10 +3,6 @@ package br.com.compasso.clientes.forms;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter @Setter
 public class CidadeForm {
 	
 	@NotBlank(message = "Nome da cidade não pode ser branco ou nulo.")
@@ -15,5 +11,18 @@ public class CidadeForm {
 	@NotBlank(message = "Sigla do estado não pode ser branco ou nulo.")
 	@Size(max = 2, min = 2, message = "Sigla de estado deve ter 2 caracteres.")
 	private String estadoSigla;
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getEstadoSigla() {
+		return estadoSigla;
+	}
+	public void setEstadoSigla(String estadoSigla) {
+		this.estadoSigla = estadoSigla;
+	}
 	
 }

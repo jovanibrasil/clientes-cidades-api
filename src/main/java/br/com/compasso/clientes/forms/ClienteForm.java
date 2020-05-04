@@ -10,10 +10,8 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.compasso.clientes.modelos.Sexo;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+
 public class ClienteForm {
 	
 	@NotBlank(message = "Nome do cliente não pode ser em branco ou nulo.")
@@ -30,5 +28,37 @@ public class ClienteForm {
 	
 	@NotNull(message = "Identificador da cidade não pode ser nulo.")
 	private Long cidadeId;
+
+	public String getNomeCompleto() {
+		return nomeCompleto;
+	}
+
+	public void setNomeCompleto(String nomeCompleto) {
+		this.nomeCompleto = nomeCompleto;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public Sexo getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(Sexo sexo) {
+		this.sexo = sexo;
+	}
+
+	public Long getCidadeId() {
+		return cidadeId;
+	}
+
+	public void setCidadeId(Long cidadeId) {
+		this.cidadeId = cidadeId;
+	}
 	
 }

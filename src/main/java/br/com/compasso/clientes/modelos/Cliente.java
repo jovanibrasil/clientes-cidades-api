@@ -15,20 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
 @Table(name = "clientes")
-@Getter @Setter
-@NoArgsConstructor
-@EqualsAndHashCode
 public class Cliente {
 	
 	@Id
-	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cliente_id", nullable = false)
 	private Long id;
@@ -36,8 +27,6 @@ public class Cliente {
 	private String nomeCompleto;
 	@Column(nullable = false)
 	private LocalDate dataNascimento;
-	@Column(nullable = false)
-	private int idade;
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Sexo sexo;
@@ -47,13 +36,75 @@ public class Cliente {
 	private Cidade cidade;
 
 	public Cliente(Long id, String nomeCompleto, LocalDate dataNascimento, Sexo sexo, Cidade cidade) {
-		super();
+		setId(id);
+		setNomeCompleto(nomeCompleto);
+		setDataNascimento(dataNascimento);
+		setSexo(sexo);
+		setCidade(cidade);
+	}
+
+	public Cliente() {}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public String getNomeCompleto() {
+		return nomeCompleto;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public int getIdade() {
+		return Period.between(dataNascimento, LocalDate.now()).getYears();
+	}
+
+	public Sexo getSexo() {
+		return sexo;
+	}
+
+	public Cidade getCidade() {
+		return cidade;
+	}
+
+	public final void setId(Long id) {
+		if(id == null) {
+			throw new IllegalArgumentException("Id não pode ser nulo.");
+		}
 		this.id = id;
+	}
+	
+	public final void setNomeCompleto(String nomeCompleto) {
+		if(nomeCompleto == null) {
+			throw new IllegalArgumentException("Nome não pode ser nulo.");
+		}
 		this.nomeCompleto = nomeCompleto;
+	}
+	
+	public final void setDataNascimento(LocalDate dataNascimento) {
+		if(dataNascimento == null) {
+			throw new IllegalArgumentException("Data de nascimento não pode ser nula.");
+		}
+		if(dataNascimento.isAfter(LocalDate.now())) {
+			throw new IllegalArgumentException("Data de nascimento deve ser no passado.");
+		}
 		this.dataNascimento = dataNascimento;
-		this.sexo = sexo;
+	}
+	
+	public final void setCidade(Cidade cidade) {
+		if(cidade == null) {
+			throw new IllegalArgumentException("Cidade não pode ser nula.");
+		}
 		this.cidade = cidade;
-		this.idade = Period.between(dataNascimento, LocalDate.now()).getYears();
+	}
+
+	public void setSexo(Sexo sexo) {
+		if(sexo == null) {
+			throw new IllegalArgumentException("Sexo não pode ser nulo.");
+		}
+		this.sexo = sexo;
 	}
 	
 }

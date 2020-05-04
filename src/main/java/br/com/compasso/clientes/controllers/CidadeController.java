@@ -1,6 +1,8 @@
 package br.com.compasso.clientes.controllers;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -24,17 +26,19 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/cidades")
-@RequiredArgsConstructor
 public class CidadeController {
 
 	private final CidadeService cidadeService;
 	private final CidadeMapper cidadeMapper;
 	
-	
+	public CidadeController(CidadeService cidadeService, CidadeMapper cidadeMapper) {
+		this.cidadeService = cidadeService;
+		this.cidadeMapper = cidadeMapper;
+	}
+
 	@ApiOperation(value = "Cria uma cidade.", notes = "Cria uma cidade no sistema. Não existem cidades com mesmo nome em um mesmo estado.")
 	@ApiResponses({
 		@ApiResponse(code = 201, message = "Cidade criada com sucesso.",  responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),
@@ -57,8 +61,10 @@ public class CidadeController {
 		@ApiResponse(code = 404, message = "Cidade não encontrada.")})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping("/{nomeCidade}")
-	public CidadeDto buscaCidadePorNome(@PathVariable String nomeCidade) {
-		return cidadeMapper.cidadeToCidadeDto(cidadeService.buscaPorNome(nomeCidade));
+	public List<CidadeDto> buscaCidadePorNome(@PathVariable String nomeCidade) {
+		return cidadeService.buscaPorNome(nomeCidade).stream()
+					.map(cidadeMapper::cidadeToCidadeDto)
+					.collect(Collectors.toList());
 	}
 	
 	@ApiOperation(value = "Busca cidade por nome e estado.", notes = "Busca por uma determinada cidade em um determinado estado. Uma cidade tem nome único em um estado.")

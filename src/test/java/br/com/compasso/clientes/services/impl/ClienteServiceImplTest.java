@@ -48,8 +48,8 @@ class ClienteServiceImplTest {
 		cidade.setNome("Porto Alegre");
 		cidade.setEstado(estado);
 		cliente = new Cliente();
+		cliente.setId(1L);
 		cliente.setCidade(cidade);
-		cliente.setIdade(30);
 		cliente.setNomeCompleto("João Silva");
 		cliente.setSexo(Sexo.M);
 		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
@@ -88,7 +88,7 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testBuscaClienteNaoExistentePorId() {
-		when(clientRepository.findById(cliente.getId())).thenThrow(NotFoundException.class);
+		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		assertThrows(NotFoundException.class, () -> {
 			clientService.buscaPorId(cliente.getId());
 		}); 
@@ -102,7 +102,7 @@ class ClienteServiceImplTest {
 	void testBuscaClientePorNome() {
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
 			.thenReturn(Arrays.asList(cliente));
-		assertEquals(1, clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()).size());
+		assertEquals(1, clientService.buscaPorNome(cliente.getNomeCompleto()).size());
 	}
 	
 	/**
@@ -112,7 +112,7 @@ class ClienteServiceImplTest {
 	@Test
 	void testBuscaClienteNaoExistentePorNome() {
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
-			.thenThrow(NotFoundException.class);
+			.thenReturn(Arrays.asList());
 		assertThrows(NotFoundException.class, () -> {
 			clientService.buscaPorNome(cliente.getNomeCompleto());
 		}); 
@@ -126,6 +126,7 @@ class ClienteServiceImplTest {
 	void testDeleteClientePorId() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
 		doNothing().when(clientRepository).delete(cliente);
+		clientService.removeCliente(cliente.getId());
 	}
 	
 	/**
@@ -134,7 +135,7 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testDeleteClienteNaoExistentePorId() {
-		when(clientRepository.findById(cliente.getId())).thenThrow(NotFoundException.class);
+		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		assertThrows(NotFoundException.class, () -> {
 			clientService.removeCliente(cliente.getId());
 		}); 
@@ -167,7 +168,7 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testAlteraClienteNaoExistentePorId() {
-		when(clientRepository.findById(cliente.getId())).thenThrow(NotFoundException.class);
+		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		assertThrows(NotFoundException.class, () -> {
 			Cliente clienteAlteracao = new Cliente();
 			clienteAlteracao.setId(cliente.getId());
