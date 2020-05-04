@@ -29,16 +29,19 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/clientes")
-@RequiredArgsConstructor
 public class ClienteController {
 
 	private final ClienteService clienteService;
 	private final ClienteMapper clienteMapper;
 	
+	public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper) {
+		this.clienteService = clienteService;
+		this.clienteMapper = clienteMapper;
+	}
+
 	@ApiOperation(value = "Cria cliente.", notes = "Cria um cliente no sistema. ")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "Criado com sucesso.", responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),

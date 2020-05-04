@@ -26,17 +26,19 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/cidades")
-@RequiredArgsConstructor
 public class CidadeController {
 
 	private final CidadeService cidadeService;
 	private final CidadeMapper cidadeMapper;
 	
-	
+	public CidadeController(CidadeService cidadeService, CidadeMapper cidadeMapper) {
+		this.cidadeService = cidadeService;
+		this.cidadeMapper = cidadeMapper;
+	}
+
 	@ApiOperation(value = "Cria uma cidade.", notes = "Cria uma cidade no sistema. Não existem cidades com mesmo nome em um mesmo estado.")
 	@ApiResponses({
 		@ApiResponse(code = 201, message = "Cidade criada com sucesso.",  responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),

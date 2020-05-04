@@ -11,14 +11,16 @@ import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.repositorios.ClienteRepository;
 import br.com.compasso.clientes.services.ClienteService;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
 
 	private final ClienteRepository clienteRepository;
 	
+	public ClienteServiceImpl(ClienteRepository clienteRepository) {
+		this.clienteRepository = clienteRepository;
+	}
+
 	/**
 	 * Salva um cliente no sistema.
 	 * 

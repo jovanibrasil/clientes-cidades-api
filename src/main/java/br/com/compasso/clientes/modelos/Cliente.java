@@ -15,11 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.NoArgsConstructor;
-
 @Entity
 @Table(name = "clientes")
-@NoArgsConstructor
 public class Cliente {
 	
 	@Id
@@ -39,7 +36,6 @@ public class Cliente {
 	private Cidade cidade;
 
 	public Cliente(Long id, String nomeCompleto, LocalDate dataNascimento, Sexo sexo, Cidade cidade) {
-		super();
 		setId(id);
 		setNomeCompleto(nomeCompleto);
 		setDataNascimento(dataNascimento);
@@ -47,6 +43,8 @@ public class Cliente {
 		setCidade(cidade);
 	}
 
+	public Cliente() {}
+	
 	public Long getId() {
 		return id;
 	}

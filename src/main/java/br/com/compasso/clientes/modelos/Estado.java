@@ -7,11 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.NoArgsConstructor;
-
 @Entity
 @Table(name = "estados")
-@NoArgsConstructor
 public final class Estado {
 	
 	@Id
@@ -25,6 +22,8 @@ public final class Estado {
 		setId(id);
 		setSigla(sigla);
 	}
+
+	public Estado() {}
 	
 	public Long getId() {
 		return id;

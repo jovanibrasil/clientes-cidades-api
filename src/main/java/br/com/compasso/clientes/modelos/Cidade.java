@@ -10,11 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.NoArgsConstructor;
-
 @Entity
 @Table(name = "cidades")
-@NoArgsConstructor
 public final class Cidade {
 	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +32,8 @@ public final class Cidade {
 		setNome(nome);
 		setEstado(estado);
 	}
+	
+	public Cidade() {}
 	
 	public Long getId() {
 		return id;
