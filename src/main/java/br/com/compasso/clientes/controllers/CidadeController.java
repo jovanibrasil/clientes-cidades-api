@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,8 @@ import io.swagger.annotations.ResponseHeader;
 @RequestMapping("/cidades")
 public class CidadeController {
 
+	private static final Logger log = LoggerFactory.getLogger(CidadeController.class);
+	
 	private final CidadeService cidadeService;
 	private final CidadeMapper cidadeMapper;
 	
@@ -46,6 +50,7 @@ public class CidadeController {
 	@PostMapping
 	public ResponseEntity<Void> criaCidade(@RequestBody @Valid CidadeForm cidadeForm) {
 		Cidade cidade = cidadeMapper.cidadeFormToCidade(cidadeForm);
+		log.info("Criando cidade {} em {}", cidadeForm.getNome(), cidadeForm.getEstadoSigla());
 		cidade = cidadeService.salvaCidade(cidade);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()

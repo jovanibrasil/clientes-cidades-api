@@ -39,7 +39,7 @@ public class ClienteServiceImpl implements ClienteService {
 		Optional<Cliente> optCliente = clienteRepository.findById(clienteId);
 		
 		if(optCliente.isEmpty()) {
-			throw new NotFoundException("Cliente não encontrado");
+			throw new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado");
 		}
 		
 		return optCliente.get();
@@ -55,7 +55,7 @@ public class ClienteServiceImpl implements ClienteService {
 	public List<Cliente> buscaPorNome(String nome) {
 		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase(nome);
 		if(clientes.size() == 0) {
-			throw new NotFoundException("Nenhum cliente encontrado com o nome informado");
+			throw new NotFoundException("Nenhum cliente encontrado com o nome " + nome);
 		}
 		return clientes;
 	}
@@ -69,7 +69,7 @@ public class ClienteServiceImpl implements ClienteService {
 		Optional<Cliente> optCliente = clienteRepository.findById(cliente.getId());
 		
 		if(optCliente.isEmpty()) {
-			throw new NotFoundException("Cliente não encontrado");
+			throw new NotFoundException("Cliente com id=" + cliente.getId() + " não foi encontrado");
 		}
 		
 		Cliente clienteSalvo = optCliente.get();
@@ -88,7 +88,7 @@ public class ClienteServiceImpl implements ClienteService {
 		Optional<Cliente> optCliente = clienteRepository.findById(clienteId);
 		
 		if(optCliente.isEmpty()) {
-			throw new NotFoundException("Cliente não encontrado");
+			throw new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado");
 		}
 		
 		clienteRepository.delete(optCliente.get());

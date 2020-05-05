@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +35,8 @@ import io.swagger.annotations.ResponseHeader;
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
+	
+	private static final Logger log = LoggerFactory.getLogger(ClienteController.class);
 
 	private final ClienteService clienteService;
 	private final ClienteMapper clienteMapper;
@@ -48,6 +52,7 @@ public class ClienteController {
 			@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@PostMapping
 	public ResponseEntity<Void> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
+		log.info("Criando cliente {}", clienteForm.getNomeCompleto());
 		Cliente clienteSalvo = clienteService.salvaCliente(clienteMapper.clienteFormToCliente(clienteForm));
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
@@ -89,6 +94,7 @@ public class ClienteController {
 	@DeleteMapping("/{clienteId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void removeCliente(@PathVariable Long clienteId){
+		log.info("Removendo cliente id={}", clienteId);
 		clienteService.removeCliente(clienteId);
 	}
 	
@@ -102,6 +108,7 @@ public class ClienteController {
 			@RequestBody @Valid AtualizacaoClienteForm atualizacaoClienteForm){
 		Cliente cliente = clienteMapper.atualizacaoClienteFormToCliente(atualizacaoClienteForm);
 		cliente.setId(clienteId);
+		log.info("Atualizando cliente id={}", clienteId);
 		cliente = clienteService.alteraCliente(cliente);
 		return clienteMapper.clienteToClienteDto(cliente);
 	}

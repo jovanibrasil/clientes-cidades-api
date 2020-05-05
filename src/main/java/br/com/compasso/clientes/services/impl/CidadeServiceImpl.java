@@ -33,7 +33,7 @@ public class CidadeServiceImpl implements CidadeService {
 		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla());
 		
 		if(!optCidade.isEmpty()) {
-			throw new InvalidParameterException("Esta cidade já existe neste estado.");
+			throw new InvalidParameterException("A cidade " + cidade.getNome() + " já existe neste estado.");
 		}
 		
 		return cidadeRepository.save(cidade);
@@ -51,7 +51,7 @@ public class CidadeServiceImpl implements CidadeService {
 		List<Cidade> cidades = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
 		
 		if(cidades.size() == 0) {
-			throw new NotFoundException("Cidade não encontrada.");
+			throw new NotFoundException("Cidade " + nomeCidade + " não encontrada.");
 		}
 
 		return cidades;
@@ -69,7 +69,7 @@ public class CidadeServiceImpl implements CidadeService {
 		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(nomeCidade, siglaEstado);
 		
 		if(optCidade.isEmpty()) {
-			throw new NotFoundException("Cidade não encontrada.");
+			throw new NotFoundException("Cidade " + nomeCidade + " não encontrada no estado " + siglaEstado);
 		}
 
 		return optCidade.get();
@@ -84,7 +84,7 @@ public class CidadeServiceImpl implements CidadeService {
 		Optional<Cidade> optCidade = cidadeRepository.findById(cidadeId);
 		
 		if(optCidade.isEmpty()) {
-			throw new NotFoundException("Cidade não encontrada.");
+			throw new NotFoundException("Cidade com id=" + cidadeId + " não encontrada.");
 		}
 
 		return optCidade.get();
