@@ -24,7 +24,7 @@ public class CadastraCliente extends SpringIntegrationTest {
 	@Quando("o usuário faz um POST para \\/clientes com as informações do cliente no corpo da mensagem")
 	public void o_usuário_faz_um_POST_para_clientes_com_as_informações_do_cliente_no_corpo_da_mensagem() {
 		ClienteForm clienteForm = new ClienteForm();
-		clienteForm.setCidadeId(1L);
+		clienteForm.setCidadeId(8L);
 		clienteForm.setDataNascimento(LocalDate.of(1992, 6, 13));
 		clienteForm.setSexo(Sexo.M);
 		clienteForm.setNomeCompleto("Jovani Brasil");

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
@@ -23,6 +24,7 @@ import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.repositorios.CidadeRepository;
 import br.com.compasso.clientes.services.impl.CidadeServiceImpl;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 class CidadeServiceImplTest {
 	

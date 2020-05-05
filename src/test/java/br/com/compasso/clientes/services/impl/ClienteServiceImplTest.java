@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.exceptions.NotFoundException;
@@ -25,6 +26,7 @@ import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.modelos.Sexo;
 import br.com.compasso.clientes.repositorios.ClienteRepository;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 class ClienteServiceImplTest {
 

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.dtos.CidadeDto;
@@ -21,7 +22,7 @@ import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.repositorios.EstadoRepository;
 
-
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 class CidadeMapperTest {
 

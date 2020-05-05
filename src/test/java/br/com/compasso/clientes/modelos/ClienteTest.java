@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 class ClienteTest {
 
 	private static Long CLIENTE_ID = 1L; 

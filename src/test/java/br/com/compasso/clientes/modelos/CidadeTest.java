@@ -3,7 +3,9 @@ package br.com.compasso.clientes.modelos;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 class CidadeTest {
 
 	private static final Estado ESTADO = new Estado(1L, "RS");
