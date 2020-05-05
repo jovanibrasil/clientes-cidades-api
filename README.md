@@ -1,5 +1,15 @@
 # Roteiro Microservice Spring Boot
 
+## Instruções de execução
+
+Para executar a aplicação basta executar o comando ```mvn spring-boot:run```. Este comando executá a aplicação no perfil dev usando o banco em memória H2, sendo suficiente para teste da aplicação. Se você preferir pode executar no perfil stage, onde o objetivo é executar com uma configuração próxima a de produção. Primeiro você precisará ter um Mysql devidamente configurado para só então executar o comando ```mvn spring-boot:run -Pstage```. [Neste diretório](/mysql-docker) você encontra um Mysql containerizado (dockerizado) que você pode executar utilizando os comandos que se encontram no Makefile do diretório. 
+
+Se você quiser executar os testes basta executar o comando ```mvn test -Ptest```. Serão executados todos os testes unitários (Junit e Mockito) e de integração (Cucumber). 
+
+A documentação Swagger da API pode ser conferida [aqui](http://localhost:8080/swagger-ui.html) se você estiver rodando localmente a aplicação neste momento. E por comodidade em breve ela também estará disponível online. 
+
+Qualquer dúvida estou a disposição.
+
 ## Objetivo
 
 Nosso objetivo com este passo do processo é conhecer melhor as suas habilidades técnicas.
