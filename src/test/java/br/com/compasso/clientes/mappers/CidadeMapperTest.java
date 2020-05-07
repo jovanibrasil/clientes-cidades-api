@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.dtos.CidadeDto;
-import br.com.compasso.clientes.exceptions.NotFoundException;
+import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
@@ -85,7 +85,7 @@ class CidadeMapperTest {
 		cidadeForm.setEstadoSigla(SIGLA_ESTADO);
 		cidadeForm.setNome(NOME_CIDADE);
 		
-		assertThrows(NotFoundException.class, () -> {
+		assertThrows(InvalidParameterException.class, () -> {
 			cidadeMapper.cidadeFormToCidade(cidadeForm);
 		});
 	}

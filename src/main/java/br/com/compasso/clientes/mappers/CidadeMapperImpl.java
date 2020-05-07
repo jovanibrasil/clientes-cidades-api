@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import br.com.compasso.clientes.dtos.CidadeDto;
-import br.com.compasso.clientes.exceptions.NotFoundException;
+import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
@@ -48,7 +48,7 @@ public class CidadeMapperImpl implements CidadeMapper {
 		Optional<Estado> estado = estadoRepository.findBySigla(cidadeForm.getEstadoSigla());
 		
 		if(estado.isEmpty()) {
-			throw new NotFoundException("Estado " + cidadeForm.getEstadoSigla() + " não encontrado.");
+			throw new InvalidParameterException("Estado " + cidadeForm.getEstadoSigla() + " não encontrado.");
 		}
 		
 		cidade.setEstado(estado.get());

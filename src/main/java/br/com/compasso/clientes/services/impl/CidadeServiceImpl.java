@@ -48,31 +48,7 @@ public class CidadeServiceImpl implements CidadeService {
 	@Transactional
 	@Override
 	public List<Cidade> buscaPorNome(String nomeCidade) {
-		List<Cidade> cidades = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
-		
-		if(cidades.size() == 0) {
-			throw new NotFoundException("Cidade " + nomeCidade + " não encontrada.");
-		}
-
-		return cidades;
-	}
-
-	/**
-	 * Busca cidades de um determinado estado. O estado é identificado pela
-	 * sua sigla.
-	 * 
-	 * @param estadoSigla é o estado que se quer buscar as cidades.
-	 * 
-	 */
-	@Override
-	public Cidade buscaPorEstado(String nomeCidade, String siglaEstado) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(nomeCidade, siglaEstado);
-		
-		if(optCidade.isEmpty()) {
-			throw new NotFoundException("Cidade " + nomeCidade + " não encontrada no estado " + siglaEstado);
-		}
-
-		return optCidade.get();
+		return cidadeRepository.findByNomeIgnoreCase(nomeCidade);
 	}
 
 	/**
@@ -88,6 +64,11 @@ public class CidadeServiceImpl implements CidadeService {
 		}
 
 		return optCidade.get();
+	}
+
+	@Override
+	public List<Cidade> buscaPorEstado(String estadoSigla) {
+		return cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla);
 	}
 
 }

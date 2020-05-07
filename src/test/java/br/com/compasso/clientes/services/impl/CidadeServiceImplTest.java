@@ -93,33 +93,7 @@ class CidadeServiceImplTest {
 	@Test
 	void testBuscaPorNomeNaoExistente() {
 		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList());	
-		assertThrows(NotFoundException.class, () -> {
-			cidadeService.buscaPorNome(cidade.getNome());
-		});
-	}
-
-	/**
-	 * Busca por uma cidade existente em um determinado estado.
-	 * 
-	 */
-	@Test
-	void testBuscaCidadePorEstado() {
-		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla()))
-			.thenReturn(Optional.of(cidade));	
-		Cidade cidadeSalva = cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla());
-		assertEquals(cidade.getNome(), cidadeSalva.getNome());
-	}
-	
-	/**
-	 * Busca por uma cidade não existente em um determinado estado.
-	 * 
-	 */
-	@Test
-	void testBuscaCidadePorEstadoNaoExistente() {
-		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla())).thenReturn(Optional.empty());	
-		assertThrows(NotFoundException.class, () -> {
-			cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla());
-		});
+		assertEquals(0, cidadeService.buscaPorNome(cidade.getNome()).size());
 	}
 	
 	/**

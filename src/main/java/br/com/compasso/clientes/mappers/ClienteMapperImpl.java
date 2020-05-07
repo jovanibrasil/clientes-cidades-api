@@ -3,6 +3,7 @@ package br.com.compasso.clientes.mappers;
 import org.springframework.stereotype.Component;
 
 import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.modelos.Cidade;
@@ -30,10 +31,13 @@ public class ClienteMapperImpl implements ClienteMapper {
 		cliente.setDataNascimento(clienteForm.getDataNascimento());
 		cliente.setSexo(clienteForm.getSexo());
 
-		Cidade cidade = cidadeService.buscaPorId(clienteForm.getCidadeId());
-		cliente.setCidade(cidade);
-		
-		return cliente;
+		try {
+			Cidade cidade = cidadeService.buscaPorId(clienteForm.getCidadeId());
+			cliente.setCidade(cidade);
+			return cliente;
+		} catch (Exception e) {
+			throw new InvalidParameterException("Id da cidade é inválido.");
+		}
 	}
 
 	@Override

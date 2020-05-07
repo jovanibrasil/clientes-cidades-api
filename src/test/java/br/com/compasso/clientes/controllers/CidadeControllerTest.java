@@ -116,7 +116,7 @@ class CidadeControllerTest {
 	void testBuscaCidadePorNome() throws Exception {
 		when(cidadeService.buscaPorNome(cidade.getNome())).thenReturn(Arrays.asList(cidade));
 		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
-		mvc.perform(MockMvcRequestBuilders.get("/cidades/" + cidade.getNome())
+		mvc.perform(MockMvcRequestBuilders.get("/cidades?nome=" + cidade.getNome())
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isOk());
 	}
@@ -134,36 +134,7 @@ class CidadeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isNotFound());
 	}
-	
-	/**
-	 * Testa busca cidade por nome em um determinado estado.
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	void testBuscaCidadePorNomeEstado() throws Exception {
-		when(cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla())).thenReturn(cidade);
-		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
-		String url = "/cidades/" + cidade.getNome() + "/" + cidade.getEstado().getSigla();
-		mvc.perform(MockMvcRequestBuilders.get(url)
-				.contentType(MediaType.APPLICATION_JSON))		
-				.andExpect(status().isOk());
-	}
-	
-	/**
-	 * TEsta busca cidade não existente por nome em um determinado estado.
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	void testBuscaCidadeNaoExistentePorNomeEstado() throws Exception {
-		when(cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla())).thenThrow(NotFoundException.class);
-		String url = "/cidades/" + cidade.getNome() + "/" + cidade.getEstado().getSigla();
-		mvc.perform(MockMvcRequestBuilders.get(url)
-				.contentType(MediaType.APPLICATION_JSON))		
-				.andExpect(status().isNotFound());		
-	}
-	
+		
 	public static String asJsonString(final Object obj) {
 		try {
 			final ObjectMapper mapper = new ObjectMapper();
