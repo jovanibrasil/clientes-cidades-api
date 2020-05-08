@@ -2,9 +2,8 @@ package br.com.compasso.clientes.bdd.steps;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import br.com.compasso.clientes.forms.CidadeForm;
-import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.repositorios.EstadoRepository;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
@@ -33,14 +31,9 @@ public class CadastraCidade extends SpringIntegrationTest {
 	/**
 	 * Cenário 1
 	 */
-
-	@Dado("que existe um estado {string} pré-cadastrado")
-	public void que_existe_um_estado_pré_cadastrado(String sigla) {
-		 if(estadoRepository.findBySigla(sigla).isEmpty()) {
-			 Estado estado = new Estado();
-			 estado.setSigla(sigla);
-			 estadoRepository.save(estado);
-		 }
+	@Dado("que existe um estado {string} pré-cadastrado sem cidades")
+	public void que_existe_um_estado_pré_cadastrado_sem_cidades(String sigla) {
+		 assertTrue(estadoRepository.findBySigla(sigla).isPresent());
 	}
 
 	@Quando("é feito um POST para {string} com a cidade no corpo")
@@ -87,10 +80,7 @@ public class CadastraCidade extends SpringIntegrationTest {
 
 	@Dado("que não existe um estado {string} cadastrado")
 	public void que_não_existe_um_estado_cadastrado(String sigla) {
-		Optional<Estado> estado = estadoRepository.findBySigla(sigla);
-		if(estado.isPresent()) {
-			estadoRepository.delete(estado.get());
-		 }
+		assertTrue(estadoRepository.findBySigla(sigla).isEmpty());
 	}
 	
 	@Então("é retornado código {int} como resultado da operação")

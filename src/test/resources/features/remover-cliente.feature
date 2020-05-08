@@ -9,7 +9,7 @@ Funcionalidade: Remoção de cliente
 		E é feito um POST para "/clientes" com o cliente no corpo
 		| nomeCompleto 	| dataNascimento 	| sexo | cidadeId |
 		| Jovani Brasil | 13/06/1992			| M		 | 8				|
-		Quando é feito um DELETE para "/clientes/{id}" passando o id desta cidade
+		Quando é feito um DELETE para "/clientes" passando o id desta cidade
 		Então é retornado código 204 como resultado da operação
 		E o corpo da mensagem é vazio
 

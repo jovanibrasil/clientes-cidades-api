@@ -2,22 +2,14 @@ package br.com.compasso.clientes.bdd.steps;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
-import br.com.compasso.clientes.repositorios.ClienteRepository;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Quando;
 
 public class RemoveCliente extends SpringIntegrationTest {
-
-	@Autowired
-	private EstadoCompartilhado estadoCompartilhado;
-	
-	@Autowired
-	ClienteRepository clienteRepository;
 	
 	@Quando("é feito um DELETE para {string} passando o id desta cidade")
 	public void é_feito_um_DELETE_para_passando_o_id_desta_cidade(String endpoint) {
