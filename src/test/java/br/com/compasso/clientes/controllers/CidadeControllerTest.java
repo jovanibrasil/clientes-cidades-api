@@ -134,6 +134,36 @@ class CidadeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isNotFound());
 	}
+	
+	/**
+	 * Testa busca de cidade por estado.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaCidadePorEstado() throws Exception {
+		String sigla = cidade.getEstado().getSigla();
+		when(cidadeService.buscaPorEstado(sigla)).thenReturn(Arrays.asList(cidade));
+		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
+		mvc.perform(MockMvcRequestBuilders.get("/cidades?estadoSigla=" + sigla)
+				.contentType(MediaType.APPLICATION_JSON))		
+				.andExpect(status().isOk());
+	}
+	
+	/**
+	 * Testa busca de cidade por estado inválido.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaCidadePorEstadoInvalido() throws Exception {
+		String sigla = "??";
+		when(cidadeService.buscaPorEstado(sigla)).thenReturn(Arrays.asList());
+		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
+		mvc.perform(MockMvcRequestBuilders.get("/cidades?estadoSigla=" + sigla)
+				.contentType(MediaType.APPLICATION_JSON))		
+				.andExpect(status().isOk());
+	}
 		
 	public static String asJsonString(final Object obj) {
 		try {

@@ -118,5 +118,34 @@ class CidadeServiceImplTest {
 			cidadeService.buscaPorId(cidade.getId());
 		});
 	}
-
+	
+	/**
+	 * Faz uma busca de cidade por estado, sendo que o estado possui uma cidade.
+	 */
+	void testBuscaDeCidadePorEstado() {
+		String estadoSigla = cidade.getEstado().getSigla();
+		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList(cidade));	
+		assertEquals(1, cidadeService.buscaPorEstado(estadoSigla).size());
+	}
+	
+	/**
+	 * Faz uma busca de cidade por estado que não existe.
+	 */
+	void testBuscaDeCidadePorEstadoQueNaoExiste() {
+		String estadoSigla = "??";
+		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
+		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
+		
+	}
+	
+	/**
+	 * Faz uma busca de cidade por estado que não existe.
+	 */
+	void testBuscaDeCidadePorEstadoSemCidade() {
+		String estadoSigla = "AM";
+		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
+		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
+		
+	}
+	
 }

@@ -73,8 +73,12 @@ class CidadeMapperTest {
 	
 	@Test
 	void testCidadeFormNullToCidade() {
-		Cidade cidade = cidadeMapper.cidadeFormToCidade(null);
-		assertEquals(null, cidade);
+		assertEquals(null, cidadeMapper.cidadeFormToCidade(null));
+	}
+	
+	@Test
+	void testCidadeToCidadeDto() {
+		assertEquals(null, cidadeMapper.cidadeToCidadeDto(null));
 	}
 	
 	@Test
