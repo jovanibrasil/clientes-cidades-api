@@ -115,9 +115,7 @@ class ClienteServiceImplTest {
 	void testBuscaClienteNaoExistentePorNome() {
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
 			.thenReturn(Arrays.asList());
-		assertThrows(NotFoundException.class, () -> {
-			clientService.buscaPorNome(cliente.getNomeCompleto());
-		}); 
+		assertEquals(0, clientService.buscaPorNome(cliente.getNomeCompleto()).size());
 	}
 	
 	/**

@@ -62,7 +62,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return new DetalheErro.Builder<String>()
 				.message(message)
-				.code(HttpStatus.NOT_FOUND.value())
+				.code(HttpStatus.BAD_REQUEST.value())
 				.build();
 	}
 	

@@ -186,7 +186,7 @@ class ClienteControllerTest {
 	void testBuscaClientePorId() throws Exception {
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clienteService.buscaPorId(cliente.getId())).thenReturn(cliente);
-		mvc.perform(MockMvcRequestBuilders.get("/clientes?id=" + cliente.getId()))		
+		mvc.perform(MockMvcRequestBuilders.get("/clientes/" + cliente.getId()))		
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
@@ -199,7 +199,7 @@ class ClienteControllerTest {
 	@Test
 	void testBuscaClienteNaoExistentePorId() throws Exception {
 		when(clienteService.buscaPorId(cliente.getId())).thenThrow(NotFoundException.class);
-		mvc.perform(MockMvcRequestBuilders.get("/clientes?id=" + cliente.getId()))		
+		mvc.perform(MockMvcRequestBuilders.get("/clientes/" + cliente.getId()))		
 				.andExpect(status().isNotFound());
 	}
 

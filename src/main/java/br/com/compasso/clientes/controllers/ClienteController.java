@@ -61,24 +61,31 @@ public class ClienteController {
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
-		
-	@ApiOperation(value = "Busca cliente por identificador (ID) ou nome.",
+	
+	@ApiOperation(value = "Busca cliente por identificador (ID).",
+			notes = "Realiza a busca de um cliente pelo id definido")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Cliente encontrado.", response = Object.class),
+		@ApiResponse(code = 400, message = "Requisição inválida."),
+		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
+	@GetMapping("/{id}")
+	public ResponseEntity<?> buscaCliente(@PathVariable Long id){
+		return ResponseEntity.ok(clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id)));
+	}
+	
+	@ApiOperation(value = "Busca cliente por nome.",
 			notes = "Na busca de cliente por nome, Como podem haver clientes com o mesmo nome, o retorno é uma lista. "
 					+ "O matching de comparação é feito de forma parcial. Exemplo: nome buscado é \"Jovani\". "
 					+ "Serão retornados todos os cliente com nome \"Jovani\", \"Jovanir\", \"Jovanilson\", etc. "
-					+ "Para buscar apenas pelo nome exato basta adicionar um espaço ao fim do nome, por exemplo \"Jovani \". "
-					+ "A busca é feita no nome completo, então você pode busca pelo nome e sobrenome. "
+					+ "A busca é feita no nome completo, então você pode buscar pelo nome e sobrenome. "
 					+ "Um exemplo seria a busca por \"Jovani Brasil\", que retornaria o registro dos "
 					+ "clientes que possuem nome \"Jovani Brasil\".")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "Cliente encontrado.", response = Object.class),
-		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
+		@ApiResponse(code = 200, message = "Resultado da busca encontrado.", response = Object.class),
+		@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@GetMapping
-	public ResponseEntity<?> buscaClientePorNome(@RequestParam(required = false) String nome, 
-			@RequestParam(required = false) Long id){
-		if(id != null) {
-			return ResponseEntity.ok(clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id)));
-		} else if (nome != null) {
+	public ResponseEntity<?> buscaCliente(@RequestParam(required = false) String nome){
+		if (nome != null) {
 			return ResponseEntity.ok(clienteService.buscaPorNome(nome)
 					.stream()
 					.map(cliente -> clienteMapper.clienteToClienteDto(cliente))

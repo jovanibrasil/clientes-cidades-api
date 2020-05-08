@@ -15,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.exceptions.InvalidParameterException;
+import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.modelos.Cidade;
@@ -70,6 +72,22 @@ class ClienteMapperTest {
 		assertEquals(cliente.getSexo(), clienteMapeado.getSexo());
 		assertEquals(cliente.getCidade(), clienteMapeado.getCidade());
 	}
+	
+	@Test
+	void testClienteFormToClienteIdCidadeInvalido() {
+		Long cidadeId = 0L;
+		when(cidadeService.buscaPorId(cidadeId )).thenThrow(NotFoundException.class);
+		
+		ClienteForm clienteForm = new ClienteForm();
+		clienteForm.setCidadeId(cidadeId);
+		clienteForm.setDataNascimento(cliente.getDataNascimento());
+		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
+		clienteForm.setSexo(cliente.getSexo());
+		
+		assertThrows(InvalidParameterException.class, () -> {
+			clienteMapper.clienteFormToCliente(clienteForm);
+		});
+	}
 
 	@Test
 	void testAtualizacaoClienteFormToCliente() {
@@ -91,5 +109,19 @@ class ClienteMapperTest {
 		assertEquals(cliente.getCidade().getId(), clienteDto.getIdCidade());
 		assertEquals(cliente.getSexo(), clienteDto.getSexo());
 	}
+	
+	@Test
+	void testClienteNulltoClienteDto() {
+		assertEquals(null, clienteMapper.clienteToClienteDto(null));
+	}
+	
+	@Test
+	void testAtualizacaoClienteNullFormToCliente() {
+		assertEquals(null, clienteMapper.atualizacaoClienteFormToCliente(null));
+	}
 
+	@Test
+	void testClienteFormNullToCliente() {
+		assertEquals(null, clienteMapper.clienteFormToCliente(null));
+	}
 }

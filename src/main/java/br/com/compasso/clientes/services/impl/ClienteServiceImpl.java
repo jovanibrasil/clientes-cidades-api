@@ -53,11 +53,7 @@ public class ClienteServiceImpl implements ClienteService {
 	 */
 	@Override
 	public List<Cliente> buscaPorNome(String nome) {
-		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase(nome);
-		if(clientes.size() == 0) {
-			throw new NotFoundException("Nenhum cliente encontrado com o nome " + nome);
-		}
-		return clientes;
+		return clienteRepository.findByNomeCompletoContainingIgnoreCase(nome);
 	}
 
 	/**

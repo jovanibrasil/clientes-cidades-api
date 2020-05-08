@@ -18,12 +18,20 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	 */
 	List<Cidade> findByNomeIgnoreCase(String name);
 	/**
-	 * Busca cidade de um determinado estado.
+	 * Busca por uma cidade de um determinado estado.
 	 * 
 	 * @param nome é o nome da cidade que se busca
 	 * @param sigla é a cigra que identifica o estado da cidade que se está buscando
 	 * @return
 	 */
 	Optional<Cidade> findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(String nome, String sigla);
+	
+	/**
+	 * Busca por todas as cidades de um determinado estado.
+	 * 
+	 * @param estadoSigla
+	 * @return
+	 */
+	List<Cidade> findByEstadoSiglaIgnoreCase(String estadoSigla);
 	
 }

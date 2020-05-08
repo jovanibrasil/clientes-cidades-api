@@ -9,7 +9,7 @@ public interface CidadeService {
 	
 	Cidade salvaCidade(Cidade cidade);
 	List<Cidade> buscaPorNome(String nomeCidade);
-	Cidade buscaPorEstado(String nomeCidade, String siglaEstado);
 	Cidade buscaPorId(Long cidadeId);
+	List<Cidade> buscaPorEstado(String estadoSigla);
 
 }

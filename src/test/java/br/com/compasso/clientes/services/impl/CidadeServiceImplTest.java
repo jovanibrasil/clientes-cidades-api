@@ -93,33 +93,7 @@ class CidadeServiceImplTest {
 	@Test
 	void testBuscaPorNomeNaoExistente() {
 		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList());	
-		assertThrows(NotFoundException.class, () -> {
-			cidadeService.buscaPorNome(cidade.getNome());
-		});
-	}
-
-	/**
-	 * Busca por uma cidade existente em um determinado estado.
-	 * 
-	 */
-	@Test
-	void testBuscaCidadePorEstado() {
-		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla()))
-			.thenReturn(Optional.of(cidade));	
-		Cidade cidadeSalva = cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla());
-		assertEquals(cidade.getNome(), cidadeSalva.getNome());
-	}
-	
-	/**
-	 * Busca por uma cidade não existente em um determinado estado.
-	 * 
-	 */
-	@Test
-	void testBuscaCidadePorEstadoNaoExistente() {
-		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla())).thenReturn(Optional.empty());	
-		assertThrows(NotFoundException.class, () -> {
-			cidadeService.buscaPorEstado(cidade.getNome(), cidade.getEstado().getSigla());
-		});
+		assertEquals(0, cidadeService.buscaPorNome(cidade.getNome()).size());
 	}
 	
 	/**
@@ -144,5 +118,34 @@ class CidadeServiceImplTest {
 			cidadeService.buscaPorId(cidade.getId());
 		});
 	}
-
+	
+	/**
+	 * Faz uma busca de cidade por estado, sendo que o estado possui uma cidade.
+	 */
+	void testBuscaDeCidadePorEstado() {
+		String estadoSigla = cidade.getEstado().getSigla();
+		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList(cidade));	
+		assertEquals(1, cidadeService.buscaPorEstado(estadoSigla).size());
+	}
+	
+	/**
+	 * Faz uma busca de cidade por estado que não existe.
+	 */
+	void testBuscaDeCidadePorEstadoQueNaoExiste() {
+		String estadoSigla = "??";
+		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
+		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
+		
+	}
+	
+	/**
+	 * Faz uma busca de cidade por estado que não existe.
+	 */
+	void testBuscaDeCidadePorEstadoSemCidade() {
+		String estadoSigla = "AM";
+		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
+		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
+		
+	}
+	
 }

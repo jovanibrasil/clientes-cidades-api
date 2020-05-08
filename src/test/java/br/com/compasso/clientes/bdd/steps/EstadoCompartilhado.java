@@ -6,7 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class EstadoCompartilhado {
 	
-	ResponseEntity<?> response;
+	private ResponseEntity<?> response;
+	private Object object;
 
 	public ResponseEntity<?> getResponse() {
 		return response;
@@ -14,6 +15,14 @@ public class EstadoCompartilhado {
 
 	public void setResponse(ResponseEntity<?> response) {
 		this.response = response;
+	}
+
+	public Object getObject() {
+		return object;
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
 	}
 
 }
