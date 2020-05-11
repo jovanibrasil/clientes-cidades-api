@@ -108,6 +108,17 @@ class CidadeControllerTest {
 	}
 
 	/**
+	 * Testa busca de cidade sem parâmetros.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaCidadeSemParametros() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/cidades"))		
+				.andExpect(status().isBadRequest());
+	}
+	
+	/**
 	 * Testa busca de cidade por nome.
 	 * 
 	 * @throws Exception

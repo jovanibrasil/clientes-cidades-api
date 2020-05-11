@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "estados")
-public final class Estado {
+public class Estado {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +19,8 @@ public final class Estado {
 	private String sigla;
 
 	public Estado(Long id, String sigla) {
-		setId(id);
-		setSigla(sigla);
+		this.id = id;
+		this.sigla = sigla;
 	}
 
 	public Estado() {}
@@ -34,16 +34,10 @@ public final class Estado {
 	}
 	
 	public void setId(Long id) {
-		if(id == null) {
-			throw new IllegalArgumentException("Id não pode ser nulo.");
-		}
 		this.id = id;
 	}
 	
 	public void setSigla(String sigla) {
-		if(sigla == null) {
-			throw new IllegalArgumentException("Sigla não pode ser nula.");
-		}
 		this.sigla = sigla;
 	}
 	

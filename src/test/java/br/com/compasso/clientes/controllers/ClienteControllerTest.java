@@ -134,6 +134,8 @@ class ClienteControllerTest {
 				.andExpect(status().isBadRequest());
 	}
 	
+	
+	
 	/**
 	 * Testa a criação de um cliente com nome em branco.
 	 * 
@@ -178,7 +180,7 @@ class ClienteControllerTest {
 	}
 	
 	/**
-	 * Testa a busca por id de um cliente.
+	 * Testa a busca de um cliente por id.
 	 * 
 	 * @throws Exception
 	 */
@@ -192,7 +194,7 @@ class ClienteControllerTest {
 	}
 	
 	/**
-	 * Testa a busca por id de um cliente que não existe.
+	 * Testa a busca de um cliente por id que não existe.
 	 * 
 	 * @throws Exception
 	 */
@@ -204,7 +206,7 @@ class ClienteControllerTest {
 	}
 
 	/**
-	 * Testa a busca por id de um cliente.
+	 * Testa a busca de um cliente por id.
 	 * 
 	 * @throws Exception
 	 */
@@ -217,8 +219,23 @@ class ClienteControllerTest {
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
+
 	/**
-	 * Testa a busca por id de um cliente que não existe.
+	 * Testa a busca de cliente sem parâmetros.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaClienteSemParametros() throws Exception {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
+		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(cliente));
+		mvc.perform(MockMvcRequestBuilders.get("/clientes"))		
+				.andExpect(status().isBadRequest());
+	}
+	
+	
+	/**
+	 * Testa a busca de um cliente por id que não existe.
 	 * 
 	 * @throws Exception
 	 */
