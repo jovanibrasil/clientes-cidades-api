@@ -1,7 +1,6 @@
 package br.com.compasso.clientes.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -23,23 +22,6 @@ public class CidadeServiceImpl implements CidadeService {
 	}
 
 	/**
-	 * Salva uma cidade no sistema. Não existem duas cidades com
-	 * nomes iguais em um mesmo estado.
-	 * 
-	 */
-	@Transactional
-	@Override
-	public Cidade salvaCidade(Cidade cidade) {
-		Optional<Cidade> optCidade = cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla());
-		
-		if(!optCidade.isEmpty()) {
-			throw new InvalidParameterException("A cidade " + cidade.getNome() + " já existe neste estado.");
-		}
-		
-		return cidadeRepository.save(cidade);
-	}
-
-	/**
 	 * Busca cidade por nome. A busca é feita considerando uma comparação
 	 * total no nome buscado.
 	 * 
@@ -57,13 +39,8 @@ public class CidadeServiceImpl implements CidadeService {
 	 */
 	@Override
 	public Cidade buscaPorId(Long cidadeId) {
-		Optional<Cidade> optCidade = cidadeRepository.findById(cidadeId);
-		
-		if(optCidade.isEmpty()) {
-			throw new NotFoundException("Cidade com id=" + cidadeId + " não encontrada.");
-		}
-
-		return optCidade.get();
+		return cidadeRepository.findById(cidadeId).orElseThrow(() -> 
+			new NotFoundException("Cidade com id=" + cidadeId + " não encontrada."));
 	}
 
 	@Override
@@ -71,4 +48,19 @@ public class CidadeServiceImpl implements CidadeService {
 		return cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla);
 	}
 
+	/**
+	 * Salva uma cidade no sistema. Não existem duas cidades com
+	 * nomes iguais em um mesmo estado.
+	 * 
+	 */
+	@Transactional
+	@Override
+	public Cidade salvaCidade(Cidade cidade) {
+		cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla())
+			.ifPresent(cliente -> { 
+				throw new InvalidParameterException("A cidade " + cidade.getNome() + " já existe neste estado."); 
+			});
+		return cidadeRepository.save(cidade);
+	}
+	
 }

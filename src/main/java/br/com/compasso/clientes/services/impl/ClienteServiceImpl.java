@@ -1,7 +1,6 @@
 package br.com.compasso.clientes.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -35,14 +34,9 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public Cliente buscaPorId(Long clienteId) {
-		Optional<Cliente> optCliente = clienteRepository.findById(clienteId);
-		
-		if(optCliente.isEmpty()) {
-			throw new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado");
-		}
-		
-		return optCliente.get();
+	public Cliente buscaPorId(Long clienteId) throws NotFoundException {
+		return clienteRepository.findById(clienteId)
+			.orElseThrow(() -> new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado"));
 	}
 
 	/**
@@ -62,16 +56,12 @@ public class ClienteServiceImpl implements ClienteService {
 	@Transactional
 	@Override
 	public Cliente alteraCliente(Cliente cliente) {
-		Optional<Cliente> optCliente = clienteRepository.findById(cliente.getId());
-		
-		if(optCliente.isEmpty()) {
-			throw new NotFoundException("Cliente com id=" + cliente.getId() + " não foi encontrado");
-		}
-		
-		Cliente clienteSalvo = optCliente.get();
-		clienteSalvo.setNomeCompleto(cliente.getNomeCompleto());
-		
-		return clienteRepository.save(clienteSalvo);
+		return clienteRepository.findById(cliente.getId())
+			.map(clienteSalvo -> {
+				clienteSalvo.setNomeCompleto(cliente.getNomeCompleto());		
+				return clienteRepository.save(clienteSalvo);
+			})
+			.orElseThrow(() -> new NotFoundException("Cliente com id=" + cliente.getId() + " não foi encontrado"));
 	}
 
 	/**
@@ -81,13 +71,13 @@ public class ClienteServiceImpl implements ClienteService {
 	@Transactional
 	@Override
 	public void removeCliente(Long clienteId) {
-		Optional<Cliente> optCliente = clienteRepository.findById(clienteId);
-		
-		if(optCliente.isEmpty()) {
-			throw new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado");
-		}
-		
-		clienteRepository.delete(optCliente.get());
+		clienteRepository.findById(clienteId)
+			.ifPresentOrElse(
+					clienteRepository::delete,
+					() -> { 
+						throw new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado"); 
+					}
+			);
 	}
 	
 }
