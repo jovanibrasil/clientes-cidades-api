@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.dtos.ClienteDTO;
 import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
@@ -107,11 +107,11 @@ public class ClienteController {
 	
 	@ApiOperation(value = "Faz o patch do cliente", notes = "Faz o patch do cliente. Neste momento é apenas permitido o patch do nome do cliente.")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "Cliente atualizado com sucesso.", response = ClienteDto.class),
+		@ApiResponse(code = 200, message = "Cliente atualizado com sucesso.", response = ClienteDTO.class),
 		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@PatchMapping("/{clienteId}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public ClienteDto atualizaCliente(@PathVariable Long clienteId, 
+	public ClienteDTO atualizaCliente(@PathVariable Long clienteId, 
 			@RequestBody @Valid AtualizacaoClienteForm atualizacaoClienteForm){
 		Cliente cliente = clienteMapper.atualizacaoClienteFormToCliente(atualizacaoClienteForm);
 		cliente.setId(clienteId);

@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.dtos.ClienteDTO;
 import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.forms.ClienteForm;
@@ -58,7 +58,7 @@ class ClienteControllerTest {
 	private MockMvc mvc;
 	
 	private ClienteForm clienteForm;
-	private ClienteDto clienteDto;
+	private ClienteDTO clienteDto;
 	private AtualizacaoClienteForm atCliForm;
 	private Cliente cliente;
 	private Cidade cidade;
@@ -78,7 +78,7 @@ class ClienteControllerTest {
 		clienteForm.setSexo(cliente.getSexo());
 		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
 	
-		clienteDto = new ClienteDto();
+		clienteDto = new ClienteDTO();
 		clienteDto.setDataNascimento(cliente.getDataNascimento());
 		clienteDto.setId(cliente.getId());
 		clienteDto.setIdade(cliente.getIdade());

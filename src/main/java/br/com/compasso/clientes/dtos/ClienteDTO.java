@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import br.com.compasso.clientes.modelos.Sexo;
 
-public class ClienteDto {
+public class ClienteDTO {
 	
 	private Long id;
 	private String nomeCompleto;

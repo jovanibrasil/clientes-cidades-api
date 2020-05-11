@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.dtos.CidadeDto;
+import br.com.compasso.clientes.dtos.CidadeDTO;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.forms.CidadeForm;
@@ -45,7 +45,7 @@ class CidadeControllerTest {
 	private MockMvc mvc;
 	
 	private CidadeForm cidadeForm;
-	private CidadeDto cidadeDto;
+	private CidadeDTO cidadeDto;
 	private Cidade cidade;
 	private Estado estado;
 	
@@ -58,7 +58,7 @@ class CidadeControllerTest {
 		cidadeForm.setNome(cidade.getNome());
 		cidadeForm.setEstadoSigla(cidade.getEstado().getSigla());
 	
-		cidadeDto = new CidadeDto();
+		cidadeDto = new CidadeDTO();
 		cidadeDto.setId(cidade.getId());
 		cidadeDto.setNome(cidade.getNome());
 	}

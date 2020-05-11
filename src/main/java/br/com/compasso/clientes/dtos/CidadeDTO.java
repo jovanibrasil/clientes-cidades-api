@@ -1,7 +1,7 @@
 package br.com.compasso.clientes.dtos;
 
 
-public class CidadeDto {
+public class CidadeDTO {
 
 	private Long id;
 	private String nome;

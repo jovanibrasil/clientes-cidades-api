@@ -14,7 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.dtos.ClienteDTO;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
@@ -101,7 +101,7 @@ class ClienteMapperTest {
 
 	@Test
 	void testClienteToClienteDto() {
-		ClienteDto clienteDto = clienteMapper.clienteToClienteDto(cliente);
+		ClienteDTO clienteDto = clienteMapper.clienteToClienteDto(cliente);
 		assertEquals(cliente.getId(), clienteDto.getId());
 		assertEquals(cliente.getIdade(), clienteDto.getIdade());
 		assertEquals(cliente.getNomeCompleto(), clienteDto.getNomeCompleto());

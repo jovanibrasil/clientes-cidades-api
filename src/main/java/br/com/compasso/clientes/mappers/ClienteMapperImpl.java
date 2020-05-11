@@ -2,7 +2,7 @@ package br.com.compasso.clientes.mappers;
 
 import org.springframework.stereotype.Component;
 
-import br.com.compasso.clientes.dtos.ClienteDto;
+import br.com.compasso.clientes.dtos.ClienteDTO;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.forms.ClienteForm;
@@ -54,12 +54,12 @@ public class ClienteMapperImpl implements ClienteMapper {
 	}
 
 	@Override
-	public ClienteDto clienteToClienteDto(Cliente cliente) {
+	public ClienteDTO clienteToClienteDto(Cliente cliente) {
 		if (cliente == null) {
 			return null;
 		}
 
-		ClienteDto clienteDto = new ClienteDto();
+		ClienteDTO clienteDto = new ClienteDTO();
 
 		clienteDto.setIdCidade(cliente.getCidade().getId());
 		clienteDto.setId(cliente.getId());
