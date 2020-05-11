@@ -28,15 +28,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.dtos.ClienteDTO;
 import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.enums.Sexo;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.services.ClienteService;
 
 @ExtendWith(SpringExtension.class)

@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
-import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;

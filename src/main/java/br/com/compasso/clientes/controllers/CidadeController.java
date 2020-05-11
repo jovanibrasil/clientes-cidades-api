@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.services.CidadeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.enums.Sexo;
 
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

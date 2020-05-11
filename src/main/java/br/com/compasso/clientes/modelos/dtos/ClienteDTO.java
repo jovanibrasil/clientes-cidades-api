@@ -1,8 +1,8 @@
-package br.com.compasso.clientes.dtos;
+package br.com.compasso.clientes.modelos.dtos;
 
 import java.time.LocalDate;
 
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.enums.Sexo;
 
 public class ClienteDTO {
 	

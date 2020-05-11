@@ -9,6 +9,8 @@ import java.time.Period;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
+import br.com.compasso.clientes.modelos.enums.Sexo;
+
 @ActiveProfiles("test")
 class ClienteTest {
 

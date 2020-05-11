@@ -2,12 +2,12 @@ package br.com.compasso.clientes.mappers;
 
 import org.springframework.stereotype.Component;
 
-import br.com.compasso.clientes.dtos.ClienteDTO;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.services.CidadeService;
 
 @Component

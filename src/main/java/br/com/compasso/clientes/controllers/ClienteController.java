@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.compasso.clientes.dtos.ClienteDTO;
-import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cliente;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.services.ClienteService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

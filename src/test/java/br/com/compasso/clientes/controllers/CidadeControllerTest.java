@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.dtos.CidadeDTO;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.services.CidadeService;
 
 @ExtendWith(SpringExtension.class)

@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.compasso.clientes.modelos.enums.Sexo;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente {
