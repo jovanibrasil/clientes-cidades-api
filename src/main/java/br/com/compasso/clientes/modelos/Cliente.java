@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.compasso.clientes.modelos.enums.Sexo;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente {
@@ -36,11 +38,11 @@ public class Cliente {
 	private Cidade cidade;
 
 	public Cliente(Long id, String nomeCompleto, LocalDate dataNascimento, Sexo sexo, Cidade cidade) {
-		setId(id);
-		setNomeCompleto(nomeCompleto);
-		setDataNascimento(dataNascimento);
-		setSexo(sexo);
-		setCidade(cidade);
+		this.id = id;
+		this.nomeCompleto = nomeCompleto;
+		this.dataNascimento = dataNascimento;
+		this.sexo = sexo;
+		this.cidade = cidade;
 	}
 
 	public Cliente() {}
@@ -69,41 +71,23 @@ public class Cliente {
 		return cidade;
 	}
 
-	public final void setId(Long id) {
-		if(id == null) {
-			throw new IllegalArgumentException("Id não pode ser nulo.");
-		}
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
-	public final void setNomeCompleto(String nomeCompleto) {
-		if(nomeCompleto == null) {
-			throw new IllegalArgumentException("Nome não pode ser nulo.");
-		}
+	public void setNomeCompleto(String nomeCompleto) {
 		this.nomeCompleto = nomeCompleto;
 	}
 	
-	public final void setDataNascimento(LocalDate dataNascimento) {
-		if(dataNascimento == null) {
-			throw new IllegalArgumentException("Data de nascimento não pode ser nula.");
-		}
-		if(dataNascimento.isAfter(LocalDate.now())) {
-			throw new IllegalArgumentException("Data de nascimento deve ser no passado.");
-		}
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 	
-	public final void setCidade(Cidade cidade) {
-		if(cidade == null) {
-			throw new IllegalArgumentException("Cidade não pode ser nula.");
-		}
+	public void setCidade(Cidade cidade) {
 		this.cidade = cidade;
 	}
 
 	public void setSexo(Sexo sexo) {
-		if(sexo == null) {
-			throw new IllegalArgumentException("Sexo não pode ser nulo.");
-		}
 		this.sexo = sexo;
 	}
 	

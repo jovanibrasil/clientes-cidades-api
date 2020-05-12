@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "cidades")
-public final class Cidade {
+public class Cidade {
 	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
@@ -27,10 +27,9 @@ public final class Cidade {
 	private Estado estado;
 
 	public Cidade(Long id, String nome, Estado estado) {
-		super();
-		setId(id);
-		setNome(nome);
-		setEstado(estado);
+		this.id = id;
+		this.nome = nome;
+		this.estado = estado;
 	}
 	
 	public Cidade() {}
@@ -48,23 +47,14 @@ public final class Cidade {
 	}
 	
 	public void setId(Long id) {
-		if(id == null) {
-			throw new IllegalArgumentException("Id não pode ser nula.");
-		}
 		this.id = id;
 	}
 	
 	public void setNome(String nome) {
-		if(nome == null) {
-			throw new IllegalArgumentException("Nome não pode ser nulo.");
-		}
 		this.nome = nome;
 	}
 
 	public void setEstado(Estado estado) {
-		if(estado == null) {
-			throw new IllegalArgumentException("Estado não pode ser nulo");
-		}
 		this.estado = estado;
 	}
 	

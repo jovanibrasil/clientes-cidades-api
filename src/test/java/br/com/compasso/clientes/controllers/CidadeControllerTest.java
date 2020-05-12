@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.dtos.CidadeDto;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.services.CidadeService;
 
 @ExtendWith(SpringExtension.class)
@@ -45,7 +45,7 @@ class CidadeControllerTest {
 	private MockMvc mvc;
 	
 	private CidadeForm cidadeForm;
-	private CidadeDto cidadeDto;
+	private CidadeDTO cidadeDto;
 	private Cidade cidade;
 	private Estado estado;
 	
@@ -58,7 +58,7 @@ class CidadeControllerTest {
 		cidadeForm.setNome(cidade.getNome());
 		cidadeForm.setEstadoSigla(cidade.getEstado().getSigla());
 	
-		cidadeDto = new CidadeDto();
+		cidadeDto = new CidadeDTO();
 		cidadeDto.setId(cidade.getId());
 		cidadeDto.setNome(cidade.getNome());
 	}
@@ -107,6 +107,17 @@ class CidadeControllerTest {
 				.andExpect(status().isBadRequest());
 	}
 
+	/**
+	 * Testa busca de cidade sem parâmetros.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaCidadeSemParametros() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/cidades"))		
+				.andExpect(status().isBadRequest());
+	}
+	
 	/**
 	 * Testa busca de cidade por nome.
 	 * 

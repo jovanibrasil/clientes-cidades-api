@@ -28,15 +28,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.dtos.ClienteDto;
 import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.forms.ClienteForm;
 import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.enums.Sexo;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.services.ClienteService;
 
 @ExtendWith(SpringExtension.class)
@@ -58,7 +58,7 @@ class ClienteControllerTest {
 	private MockMvc mvc;
 	
 	private ClienteForm clienteForm;
-	private ClienteDto clienteDto;
+	private ClienteDTO clienteDto;
 	private AtualizacaoClienteForm atCliForm;
 	private Cliente cliente;
 	private Cidade cidade;
@@ -78,7 +78,7 @@ class ClienteControllerTest {
 		clienteForm.setSexo(cliente.getSexo());
 		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
 	
-		clienteDto = new ClienteDto();
+		clienteDto = new ClienteDTO();
 		clienteDto.setDataNascimento(cliente.getDataNascimento());
 		clienteDto.setId(cliente.getId());
 		clienteDto.setIdade(cliente.getIdade());
@@ -134,6 +134,8 @@ class ClienteControllerTest {
 				.andExpect(status().isBadRequest());
 	}
 	
+	
+	
 	/**
 	 * Testa a criação de um cliente com nome em branco.
 	 * 
@@ -178,7 +180,7 @@ class ClienteControllerTest {
 	}
 	
 	/**
-	 * Testa a busca por id de um cliente.
+	 * Testa a busca de um cliente por id.
 	 * 
 	 * @throws Exception
 	 */
@@ -192,7 +194,7 @@ class ClienteControllerTest {
 	}
 	
 	/**
-	 * Testa a busca por id de um cliente que não existe.
+	 * Testa a busca de um cliente por id que não existe.
 	 * 
 	 * @throws Exception
 	 */
@@ -204,7 +206,7 @@ class ClienteControllerTest {
 	}
 
 	/**
-	 * Testa a busca por id de um cliente.
+	 * Testa a busca de um cliente por id.
 	 * 
 	 * @throws Exception
 	 */
@@ -217,8 +219,23 @@ class ClienteControllerTest {
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
+
 	/**
-	 * Testa a busca por id de um cliente que não existe.
+	 * Testa a busca de cliente sem parâmetros.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void testBuscaClienteSemParametros() throws Exception {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
+		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(cliente));
+		mvc.perform(MockMvcRequestBuilders.get("/clientes"))		
+				.andExpect(status().isBadRequest());
+	}
+	
+	
+	/**
+	 * Testa a busca de um cliente por id que não existe.
 	 * 
 	 * @throws Exception
 	 */

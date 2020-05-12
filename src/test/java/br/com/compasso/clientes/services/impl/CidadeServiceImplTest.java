@@ -85,7 +85,7 @@ class CidadeServiceImplTest {
 		List<Cidade> cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
 		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
 	}
-	
+		
 	/**
 	 * Busca por nome uma cidade não existente no sistema.
 	 * 
@@ -122,6 +122,7 @@ class CidadeServiceImplTest {
 	/**
 	 * Faz uma busca de cidade por estado, sendo que o estado possui uma cidade.
 	 */
+	@Test
 	void testBuscaDeCidadePorEstado() {
 		String estadoSigla = cidade.getEstado().getSigla();
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList(cidade));	
@@ -131,6 +132,7 @@ class CidadeServiceImplTest {
 	/**
 	 * Faz uma busca de cidade por estado que não existe.
 	 */
+	@Test
 	void testBuscaDeCidadePorEstadoQueNaoExiste() {
 		String estadoSigla = "??";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
@@ -141,6 +143,7 @@ class CidadeServiceImplTest {
 	/**
 	 * Faz uma busca de cidade por estado que não existe.
 	 */
+	@Test
 	void testBuscaDeCidadePorEstadoSemCidade() {
 		String estadoSigla = "AM";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	

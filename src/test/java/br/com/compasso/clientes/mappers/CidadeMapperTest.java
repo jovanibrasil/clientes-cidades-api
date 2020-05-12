@@ -15,11 +15,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import br.com.compasso.clientes.dtos.CidadeDto;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.repositorios.EstadoRepository;
 
 @ActiveProfiles("test")
@@ -49,7 +49,7 @@ class CidadeMapperTest {
 		cidade.setNome(NOME_CIDADE);
 		cidade.setEstado(new Estado(ID_ESTADO, SIGLA_ESTADO));
 		
-		CidadeDto cidadeDto = cidadeMapper.cidadeToCidadeDto(cidade);
+		CidadeDTO cidadeDto = cidadeMapper.cidadeToCidadeDto(cidade);
 		
 		assertEquals(ID_CIDADE, cidadeDto.getId());
 		assertEquals(NOME_CIDADE, cidadeDto.getNome());

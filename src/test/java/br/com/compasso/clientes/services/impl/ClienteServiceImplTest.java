@@ -23,7 +23,7 @@ import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.enums.Sexo;
 import br.com.compasso.clientes.repositorios.ClienteRepository;
 
 @ActiveProfiles("test")

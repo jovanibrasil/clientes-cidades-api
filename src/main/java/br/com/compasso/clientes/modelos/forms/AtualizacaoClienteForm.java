@@ -1,4 +1,4 @@
-package br.com.compasso.clientes.forms;
+package br.com.compasso.clientes.modelos.forms;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

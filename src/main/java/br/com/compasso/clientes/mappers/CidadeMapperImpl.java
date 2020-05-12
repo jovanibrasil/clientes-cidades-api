@@ -4,11 +4,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import br.com.compasso.clientes.dtos.CidadeDto;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.forms.CidadeForm;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.repositorios.EstadoRepository;
 
 @Component
@@ -21,12 +21,12 @@ public class CidadeMapperImpl implements CidadeMapper {
 	}
 	
 	@Override
-	public CidadeDto cidadeToCidadeDto(Cidade cidade) {
+	public CidadeDTO cidadeToCidadeDto(Cidade cidade) {
 		if (cidade == null) {
 			return null;
 		}
 
-		CidadeDto cidadeDto = new CidadeDto();
+		CidadeDTO cidadeDto = new CidadeDTO();
 
 		cidadeDto.setEstadoSigla(cidade.getEstado().getSigla());
 		cidadeDto.setId(cidade.getId());

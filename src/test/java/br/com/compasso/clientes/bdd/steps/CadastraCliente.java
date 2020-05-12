@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import br.com.compasso.clientes.forms.ClienteForm;
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.enums.Sexo;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Quando;

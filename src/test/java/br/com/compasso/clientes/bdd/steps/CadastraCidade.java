@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import br.com.compasso.clientes.forms.CidadeForm;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.repositorios.EstadoRepository;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;

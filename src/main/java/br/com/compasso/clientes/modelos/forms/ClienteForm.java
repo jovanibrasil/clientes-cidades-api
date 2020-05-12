@@ -1,4 +1,4 @@
-package br.com.compasso.clientes.forms;
+package br.com.compasso.clientes.modelos.forms;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.com.compasso.clientes.modelos.Sexo;
+import br.com.compasso.clientes.modelos.enums.Sexo;
 import io.swagger.annotations.ApiModelProperty;
 
 
