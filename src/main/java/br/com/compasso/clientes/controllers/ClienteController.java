@@ -1,7 +1,6 @@
 package br.com.compasso.clientes.controllers;
 
 import java.net.URI;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.compasso.clientes.mappers.ClienteMapper;
-import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
 import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.modelos.forms.ClienteForm;
@@ -39,11 +36,9 @@ public class ClienteController {
 	private static final Logger log = LoggerFactory.getLogger(ClienteController.class);
 
 	private final ClienteService clienteService;
-	private final ClienteMapper clienteMapper;
 	
-	public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper) {
+	public ClienteController(ClienteService clienteService) {
 		this.clienteService = clienteService;
-		this.clienteMapper = clienteMapper;
 	}
 
 	@ApiOperation(value = "Cria cliente.", notes = "Cria um cliente no sistema. ")
@@ -53,7 +48,7 @@ public class ClienteController {
 	@PostMapping
 	public ResponseEntity<Void> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
 		log.info("Criando cliente {}", clienteForm.getNomeCompleto());
-		Cliente clienteSalvo = clienteService.salvaCliente(clienteMapper.clienteFormToCliente(clienteForm));
+		ClienteDTO clienteSalvo = clienteService.salvaCliente(clienteForm);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{clienteId}")
@@ -70,7 +65,7 @@ public class ClienteController {
 		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscaCliente(@PathVariable Long id){
-		return ResponseEntity.ok(clienteMapper.clienteToClienteDto(clienteService.buscaPorId(id)));
+		return ResponseEntity.ok(clienteService.buscaPorId(id));
 	}
 	
 	@ApiOperation(value = "Busca cliente por nome.",
@@ -84,14 +79,8 @@ public class ClienteController {
 		@ApiResponse(code = 200, message = "Resultado da busca encontrado.", response = Object.class),
 		@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@GetMapping
-	public ResponseEntity<?> buscaCliente(@RequestParam(required = false) String nome){
-		if (nome != null) {
-			return ResponseEntity.ok(clienteService.buscaPorNome(nome)
-					.stream()
-					.map(cliente -> clienteMapper.clienteToClienteDto(cliente))
-					.collect(Collectors.toList()));
-		}
-		return ResponseEntity.badRequest().build();
+	public ResponseEntity<?> buscaCliente(@RequestParam(required = true) String nome){
+		return ResponseEntity.ok(clienteService.buscaPorNome(nome));
 	}
 	
 	@ApiOperation(value = "Remove cliente", notes = "Remove o cliente com Id especificado.")
@@ -113,11 +102,9 @@ public class ClienteController {
 	@ResponseStatus(value = HttpStatus.OK)
 	public ClienteDTO atualizaCliente(@PathVariable Long clienteId, 
 			@RequestBody @Valid AtualizacaoClienteForm atualizacaoClienteForm){
-		Cliente cliente = clienteMapper.atualizacaoClienteFormToCliente(atualizacaoClienteForm);
-		cliente.setId(clienteId);
 		log.info("Atualizando cliente id={}", clienteId);
-		cliente = clienteService.alteraCliente(cliente);
-		return clienteMapper.clienteToClienteDto(cliente);
+		atualizacaoClienteForm.setId(clienteId);
+		return clienteService.alteraCliente(atualizacaoClienteForm);
 	}
 	
 }

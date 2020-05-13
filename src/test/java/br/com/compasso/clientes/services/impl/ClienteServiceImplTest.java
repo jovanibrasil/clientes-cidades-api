@@ -3,6 +3,7 @@ package br.com.compasso.clientes.services.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +23,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.exceptions.NotFoundException;
+import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cliente;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.repositorios.ClienteRepository;
 
 @ActiveProfiles("test")
@@ -32,14 +37,24 @@ class ClienteServiceImplTest {
 	@InjectMocks
 	private ClienteServiceImpl clientService;
 	@MockBean
+	private ClienteMapper clienteMapper;
+	@MockBean
 	private ClienteRepository clientRepository;
+
+	private ClienteForm clienteForm;
+	private ClienteDTO clienteDto;
+	private AtualizacaoClienteForm atualizaClienteForm;
 	private Cliente cliente;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		clientService = new ClienteServiceImpl(clientRepository);
+		clientService = new ClienteServiceImpl(clientRepository, clienteMapper);
+		
 		cliente = ScenarioFactory.criaClienteJoao();
+		clienteForm = ScenarioFactory.criaClienteFormJoao();
+		clienteDto = ScenarioFactory.criaClienteDTOJoao();
+		atualizaClienteForm = ScenarioFactory.criaClienteFormAlteracaoJoao();
 	}
 
 	/**
@@ -48,6 +63,8 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testSalvaCliente() {
+		when(clienteMapper.clienteFormToCliente(any())).thenReturn(cliente);
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.save(cliente)).then(new Answer<Cliente>() {
 			@Override
 			public Cliente answer(InvocationOnMock invocation) throws Throwable {
@@ -56,7 +73,7 @@ class ClienteServiceImplTest {
 				return cliente;
 			}
 		});
-		assertEquals(1L, clientService.salvaCliente(cliente).getId());
+		assertEquals(1L, clientService.salvaCliente(clienteForm).getId());
 	}
 	
 	/**
@@ -65,6 +82,7 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testBuscaClientePorId() {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
 		assertNotNull(clientService.buscaPorId(cliente.getId()));
 	}
@@ -76,6 +94,7 @@ class ClienteServiceImplTest {
 	@Test
 	void testBuscaClienteNaoExistentePorId() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		assertThrows(NotFoundException.class, () -> {
 			clientService.buscaPorId(cliente.getId());
 		}); 
@@ -87,6 +106,7 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testBuscaClientePorNome() {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
 			.thenReturn(Arrays.asList(cliente));
 		assertEquals(1, clientService.buscaPorNome(cliente.getNomeCompleto()).size());
@@ -98,6 +118,7 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testBuscaClienteNaoExistentePorNome() {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
 			.thenReturn(Arrays.asList());
 		assertEquals(0, clientService.buscaPorNome(cliente.getNomeCompleto()).size());
@@ -132,6 +153,8 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testAlteraClientePorId() {
+		when(clienteMapper.clienteToClienteDto(any())).thenReturn(clienteDto);
+		when(clienteMapper.atualizacaoClienteFormToCliente(any())).thenReturn(cliente);
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
 		when(clientRepository.save(cliente)).then(new Answer<Cliente>() {
 			@Override
@@ -139,9 +162,9 @@ class ClienteServiceImplTest {
 				return (Cliente) invocation.getArgument(0);
 			}
 		});
-		Cliente clienteAlteracao = ScenarioFactory.criaClienteAlteradoJoao();
-		Cliente cliente = clientService.alteraCliente(clienteAlteracao);
-		assertEquals(clienteAlteracao.getNomeCompleto(), cliente.getNomeCompleto());
+		atualizaClienteForm.setId(cliente.getId());
+		ClienteDTO cliente = clientService.alteraCliente(atualizaClienteForm);
+		assertEquals(atualizaClienteForm.getNomeCompleto(), cliente.getNomeCompleto());
 	}
 	
 	/**
@@ -150,9 +173,11 @@ class ClienteServiceImplTest {
 	 */
 	@Test
 	void testAlteraClienteNaoExistentePorId() {
+		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
+		when(clienteMapper.atualizacaoClienteFormToCliente(any())).thenReturn(cliente);
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		assertThrows(NotFoundException.class, () -> {
-			clientService.alteraCliente(ScenarioFactory.criaClienteAlteradoJoao());
+			clientService.alteraCliente(atualizaClienteForm);
 		}); 
 	}
 	

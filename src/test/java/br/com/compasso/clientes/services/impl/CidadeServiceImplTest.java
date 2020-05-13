@@ -2,6 +2,7 @@ package br.com.compasso.clientes.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -20,7 +21,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
+import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.repositorios.CidadeRepository;
 import br.com.compasso.clientes.services.impl.CidadeServiceImpl;
 
@@ -32,14 +36,26 @@ class CidadeServiceImplTest {
 	private CidadeServiceImpl cidadeService;
 	@MockBean
 	private CidadeRepository cidadeRepository;
-
+	@MockBean
+	private CidadeMapper cidadeMapper;
+	
 	private Cidade cidade;
+
+	private CidadeForm cidadeForm;
+	private CidadeDTO cidadeDto;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-        cidadeService = new CidadeServiceImpl(cidadeRepository);
+        cidadeService = new CidadeServiceImpl(cidadeRepository, cidadeMapper);
+        
 		cidade = ScenarioFactory.criaCidadePoa();
+		cidadeForm = ScenarioFactory.criaCidadeFormPoa();
+		cidadeDto = ScenarioFactory.criaCidadeDtoPoa();
+		
+		when(cidadeMapper.cidadeFormToCidade(any())).thenReturn(cidade);
+		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
+		
 	}
 
 	/**
@@ -53,7 +69,7 @@ class CidadeServiceImplTest {
 				cidade.getEstado().getSigla())).thenReturn(Optional.empty());
 		when(cidadeRepository.save(cidade)).thenReturn(cidade);
 		
-		Cidade cidadeSalva = cidadeService.salvaCidade(cidade);
+		CidadeDTO cidadeSalva = cidadeService.salvaCidade(cidadeForm);
 		
 		assertEquals(cidade.getNome(), cidadeSalva.getNome());
 	}
@@ -69,7 +85,7 @@ class CidadeServiceImplTest {
 				cidade.getEstado().getSigla())).thenReturn(Optional.of(cidade));
 		
 		assertThrows(InvalidParameterException.class, () -> {
-			cidadeService.salvaCidade(cidade);	
+			cidadeService.salvaCidade(cidadeForm);	
 		});
 	}
 	
@@ -80,7 +96,7 @@ class CidadeServiceImplTest {
 	@Test
 	void testBuscaPorNome() {
 		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList(cidade));	
-		List<Cidade> cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
+		List<CidadeDTO> cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
 		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
 	}
 		

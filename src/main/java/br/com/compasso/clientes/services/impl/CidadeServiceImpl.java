@@ -1,6 +1,7 @@
 package br.com.compasso.clientes.services.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -8,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
+import br.com.compasso.clientes.mappers.CidadeMapper;
 import br.com.compasso.clientes.modelos.Cidade;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.repositorios.CidadeRepository;
 import br.com.compasso.clientes.services.CidadeService;
 
@@ -16,9 +20,11 @@ import br.com.compasso.clientes.services.CidadeService;
 public class CidadeServiceImpl implements CidadeService {
 
 	private final CidadeRepository cidadeRepository;
+	private final CidadeMapper cidadeMapper;
 	
-	public CidadeServiceImpl(CidadeRepository cidadeRepository) {
+	public CidadeServiceImpl(CidadeRepository cidadeRepository, CidadeMapper cidadeMapper) {
 		this.cidadeRepository = cidadeRepository;
+		this.cidadeMapper = cidadeMapper;
 	}
 
 	/**
@@ -29,8 +35,10 @@ public class CidadeServiceImpl implements CidadeService {
 	 */
 	@Transactional
 	@Override
-	public List<Cidade> buscaPorNome(String nomeCidade) {
-		return cidadeRepository.findByNomeIgnoreCase(nomeCidade);
+	public List<CidadeDTO> buscaPorNome(String nomeCidade) {
+		return cidadeRepository.findByNomeIgnoreCase(nomeCidade).stream()
+				.map(cidadeMapper::cidadeToCidadeDto)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -44,8 +52,10 @@ public class CidadeServiceImpl implements CidadeService {
 	}
 
 	@Override
-	public List<Cidade> buscaPorEstado(String estadoSigla) {
-		return cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla);
+	public List<CidadeDTO> buscaPorEstado(String estadoSigla) {
+		return cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla).stream()
+				.map(cidadeMapper::cidadeToCidadeDto)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -55,12 +65,14 @@ public class CidadeServiceImpl implements CidadeService {
 	 */
 	@Transactional
 	@Override
-	public Cidade salvaCidade(Cidade cidade) {
+	public CidadeDTO salvaCidade(CidadeForm cidadeForm) {
+		Cidade cidade = cidadeMapper.cidadeFormToCidade(cidadeForm);
+		
 		cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla())
 			.ifPresent(cliente -> { 
 				throw new InvalidParameterException("A cidade " + cidade.getNome() + " já existe neste estado."); 
 			});
-		return cidadeRepository.save(cidade);
+		return cidadeMapper.cidadeToCidadeDto(cidadeRepository.save(cidade));
 	}
 	
 }

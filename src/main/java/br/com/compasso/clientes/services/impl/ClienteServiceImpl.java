@@ -1,13 +1,18 @@
 package br.com.compasso.clientes.services.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import br.com.compasso.clientes.exceptions.NotFoundException;
+import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cliente;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.repositorios.ClienteRepository;
 import br.com.compasso.clientes.services.ClienteService;
 
@@ -15,9 +20,11 @@ import br.com.compasso.clientes.services.ClienteService;
 public class ClienteServiceImpl implements ClienteService {
 
 	private final ClienteRepository clienteRepository;
+	private final ClienteMapper clienteMapper;
 	
-	public ClienteServiceImpl(ClienteRepository clienteRepository) {
+	public ClienteServiceImpl(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
 		this.clienteRepository = clienteRepository;
+		this.clienteMapper = clienteMapper;
 	}
 
 	/**
@@ -25,8 +32,9 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public Cliente salvaCliente(Cliente cliente) {
-		return clienteRepository.save(cliente);
+	public ClienteDTO salvaCliente(ClienteForm clienteForm) {
+		Cliente cliente = clienteMapper.clienteFormToCliente(clienteForm);
+		return clienteMapper.clienteToClienteDto(clienteRepository.save(cliente));
 	}
 
 	/**
@@ -34,8 +42,9 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public Cliente buscaPorId(Long clienteId) throws NotFoundException {
+	public ClienteDTO buscaPorId(Long clienteId) throws NotFoundException {
 		return clienteRepository.findById(clienteId)
+			.map(clienteMapper::clienteToClienteDto)
 			.orElseThrow(() -> new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado"));
 	}
 
@@ -46,8 +55,10 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public List<Cliente> buscaPorNome(String nome) {
-		return clienteRepository.findByNomeCompletoContainingIgnoreCase(nome);
+	public List<ClienteDTO> buscaPorNome(String nome) {
+		return clienteRepository.findByNomeCompletoContainingIgnoreCase(nome).stream()
+				.map(clienteMapper::clienteToClienteDto)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -55,13 +66,13 @@ public class ClienteServiceImpl implements ClienteService {
 	 */
 	@Transactional
 	@Override
-	public Cliente alteraCliente(Cliente cliente) {
-		return clienteRepository.findById(cliente.getId())
+	public ClienteDTO alteraCliente(AtualizacaoClienteForm atualizaClienteForm) {
+		return clienteRepository.findById(atualizaClienteForm.getId())
 			.map(clienteSalvo -> {
-				clienteSalvo.setNomeCompleto(cliente.getNomeCompleto());		
-				return clienteRepository.save(clienteSalvo);
+				clienteSalvo.setNomeCompleto(atualizaClienteForm.getNomeCompleto());		
+				return clienteMapper.clienteToClienteDto(clienteRepository.save(clienteSalvo));
 			})
-			.orElseThrow(() -> new NotFoundException("Cliente com id=" + cliente.getId() + " não foi encontrado"));
+			.orElseThrow(() -> new NotFoundException("Cliente com id=" + atualizaClienteForm.getId() + " não foi encontrado"));
 	}
 
 	/**

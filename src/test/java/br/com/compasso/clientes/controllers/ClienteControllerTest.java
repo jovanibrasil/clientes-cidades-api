@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.compasso.clientes.ScenarioFactory;
+import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.mappers.ClienteMapper;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
 import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
@@ -44,8 +44,7 @@ class ClienteControllerTest {
 	
 	@MockBean
 	private ClienteService clienteService;
-	@MockBean
-	private ClienteMapper clienteMapper;
+	
 	@Autowired
 	private MockMvc mvc;
 	
@@ -69,8 +68,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testSalvaClienteValido() throws Exception {
-		when(clienteMapper.clienteFormToCliente(any())).thenReturn(cliente);
-		when(clienteService.salvaCliente(cliente)).thenReturn(cliente);
+		when(clienteService.salvaCliente(any())).thenReturn(clienteDto);
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(clienteForm)))		
@@ -85,11 +83,11 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testSalvaClienteComCidadeNaoExistente() throws Exception {
-		when(clienteMapper.clienteFormToCliente(any())).thenThrow(NotFoundException.class);
+		when(clienteService.salvaCliente(any())).thenThrow(InvalidParameterException.class);
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(clienteForm)))		
-				.andExpect(status().isNotFound());
+				.andExpect(status().isBadRequest());
 	}
 	
 	/**
@@ -158,8 +156,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testBuscaClientePorId() throws Exception {
-		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
-		when(clienteService.buscaPorId(cliente.getId())).thenReturn(cliente);
+		when(clienteService.buscaPorId(cliente.getId())).thenReturn(clienteDto);
 		mvc.perform(MockMvcRequestBuilders.get("/clientes/" + cliente.getId()))		
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
@@ -184,8 +181,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testBuscaClientePorNome() throws Exception {
-		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
-		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(cliente));
+		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(clienteDto));
 		mvc.perform(MockMvcRequestBuilders.get("/clientes?nome=" + cliente.getNomeCompleto()))		
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
@@ -199,8 +195,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testBuscaClienteSemParametros() throws Exception {
-		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
-		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(cliente));
+		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(clienteDto));
 		mvc.perform(MockMvcRequestBuilders.get("/clientes"))		
 				.andExpect(status().isBadRequest());
 	}
@@ -249,9 +244,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testAlteraNomeCliente() throws Exception {
-		when(clienteMapper.atualizacaoClienteFormToCliente(any())).thenReturn(cliente);
-		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
-		when(clienteService.alteraCliente(cliente)).thenReturn(cliente);
+		when(clienteService.alteraCliente(any())).thenReturn(clienteDto);
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/" + cliente.getId())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(asJsonString(atualizaClienteForm)))		
@@ -266,8 +259,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testAlteraNomeClienteNaoExistente() throws Exception {
-		when(clienteMapper.atualizacaoClienteFormToCliente(any())).thenReturn(cliente);
-		when(clienteService.alteraCliente(cliente)).thenThrow(NotFoundException.class);
+		when(clienteService.alteraCliente(any())).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/-1")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(asJsonString(atualizaClienteForm)))		

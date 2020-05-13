@@ -1,7 +1,6 @@
 package br.com.compasso.clientes.controllers;
 
 import java.net.URI;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.compasso.clientes.mappers.CidadeMapper;
-import br.com.compasso.clientes.modelos.Cidade;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
 import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.services.CidadeService;
 import io.swagger.annotations.ApiOperation;
@@ -32,11 +30,9 @@ public class CidadeController {
 	private static final Logger log = LoggerFactory.getLogger(CidadeController.class);
 	
 	private final CidadeService cidadeService;
-	private final CidadeMapper cidadeMapper;
 	
-	public CidadeController(CidadeService cidadeService, CidadeMapper cidadeMapper) {
+	public CidadeController(CidadeService cidadeService) {
 		this.cidadeService = cidadeService;
-		this.cidadeMapper = cidadeMapper;
 	}
 
 	@ApiOperation(value = "Cria uma cidade.", notes = "Cria uma cidade no sistema. Não existem cidades com mesmo nome em um mesmo estado.")
@@ -45,13 +41,12 @@ public class CidadeController {
 		@ApiResponse(code = 404, message = "Cidade não encontrada.")})
 	@PostMapping
 	public ResponseEntity<Void> criaCidade(@RequestBody @Valid CidadeForm cidadeForm) {
-		Cidade cidade = cidadeMapper.cidadeFormToCidade(cidadeForm);
 		log.info("Criando cidade {} em {}", cidadeForm.getNome(), cidadeForm.getEstadoSigla());
-		cidade = cidadeService.salvaCidade(cidade);
+		CidadeDTO cidadeDTO = cidadeService.salvaCidade(cidadeForm);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{nomeCidade}")
-				.buildAndExpand(cidade.getNome())
+				.buildAndExpand(cidadeDTO.getNome())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -64,15 +59,11 @@ public class CidadeController {
 	@GetMapping
 	public ResponseEntity<?> buscaCidade(@RequestParam(required = false) String nome, 
 			@RequestParam(required = false) String estadoSigla) {
+		// Chama serviço de acordo com o parâmetro passado
 		if(nome != null) {
-			return ResponseEntity.ok(cidadeService.buscaPorNome(nome).stream()
-			.map(cidadeMapper::cidadeToCidadeDto)
-			.collect(Collectors.toList()));
+			return ResponseEntity.ok(cidadeService.buscaPorNome(nome));
 		} else if(estadoSigla != null) {
-			return ResponseEntity.ok(cidadeService.buscaPorEstado(estadoSigla)
-					.stream()
-					.map(cidadeMapper::cidadeToCidadeDto)
-					.collect(Collectors.toList()));
+			return ResponseEntity.ok(cidadeService.buscaPorEstado(estadoSigla));
 		}
 		return ResponseEntity.badRequest().build();
 	}

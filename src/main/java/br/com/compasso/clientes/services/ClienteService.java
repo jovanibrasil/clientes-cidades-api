@@ -2,14 +2,16 @@ package br.com.compasso.clientes.services;
 
 import java.util.List;
 
-import br.com.compasso.clientes.modelos.Cliente;
+import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
+import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.modelos.forms.ClienteForm;
 
 public interface ClienteService {
 
-	Cliente salvaCliente(Cliente cliente);
-	Cliente buscaPorId(Long clienteId);
-	List<Cliente> buscaPorNome(String nome);
-	Cliente alteraCliente(Cliente cliente);
+	ClienteDTO salvaCliente(ClienteForm clienteForm);
+	ClienteDTO buscaPorId(Long clienteId);
+	List<ClienteDTO> buscaPorNome(String nome);
+	ClienteDTO alteraCliente(AtualizacaoClienteForm cliente);
 	void removeCliente(Long clienteId);
 	
 }

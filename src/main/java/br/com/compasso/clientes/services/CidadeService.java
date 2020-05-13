@@ -4,12 +4,14 @@ package br.com.compasso.clientes.services;
 import java.util.List;
 
 import br.com.compasso.clientes.modelos.Cidade;
+import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
+import br.com.compasso.clientes.modelos.forms.CidadeForm;
 
 public interface CidadeService {
 	
-	Cidade salvaCidade(Cidade cidade);
-	List<Cidade> buscaPorNome(String nomeCidade);
+	CidadeDTO salvaCidade(CidadeForm cidadeForm);
+	List<CidadeDTO> buscaPorNome(String nomeCidade);
 	Cidade buscaPorId(Long cidadeId);
-	List<Cidade> buscaPorEstado(String estadoSigla);
+	List<CidadeDTO> buscaPorEstado(String estadoSigla);
 
 }
