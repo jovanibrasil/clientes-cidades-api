@@ -1,10 +1,11 @@
 package br.com.compasso.clientes.services.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -19,11 +20,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.enums.Sexo;
 import br.com.compasso.clientes.repositorios.ClienteRepository;
 
 @ActiveProfiles("test")
@@ -34,27 +33,13 @@ class ClienteServiceImplTest {
 	private ClienteServiceImpl clientService;
 	@MockBean
 	private ClienteRepository clientRepository;
-
-	private Cidade cidade;
-	private Estado estado;
 	private Cliente cliente;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		clientService = new ClienteServiceImpl(clientRepository);
-
-		estado = new Estado();
-		estado.setSigla("RS");
-		cidade = new Cidade();
-		cidade.setNome("Porto Alegre");
-		cidade.setEstado(estado);
-		cliente = new Cliente();
-		cliente.setId(1L);
-		cliente.setCidade(cidade);
-		cliente.setNomeCompleto("João Silva");
-		cliente.setSexo(Sexo.M);
-		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
+		cliente = ScenarioFactory.criaClienteJoao();
 	}
 
 	/**
@@ -154,12 +139,9 @@ class ClienteServiceImplTest {
 				return (Cliente) invocation.getArgument(0);
 			}
 		});
-		Cliente clienteAlteracao = new Cliente();
-		clienteAlteracao.setId(cliente.getId());
-		String nome = "Jovanio";
-		clienteAlteracao.setNomeCompleto(nome);
+		Cliente clienteAlteracao = ScenarioFactory.criaClienteAlteradoJoao();
 		Cliente cliente = clientService.alteraCliente(clienteAlteracao);
-		assertEquals(nome, cliente.getNomeCompleto());
+		assertEquals(clienteAlteracao.getNomeCompleto(), cliente.getNomeCompleto());
 	}
 	
 	/**
@@ -170,10 +152,7 @@ class ClienteServiceImplTest {
 	void testAlteraClienteNaoExistentePorId() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		assertThrows(NotFoundException.class, () -> {
-			Cliente clienteAlteracao = new Cliente();
-			clienteAlteracao.setId(cliente.getId());
-			clienteAlteracao.setNomeCompleto("Jovanir");
-			clientService.alteraCliente(clienteAlteracao);
+			clientService.alteraCliente(ScenarioFactory.criaClienteAlteradoJoao());
 		}); 
 	}
 	

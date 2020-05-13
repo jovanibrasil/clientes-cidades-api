@@ -1,5 +1,6 @@
 package br.com.compasso.clientes.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -8,8 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.Arrays;
-
-import static org.mockito.ArgumentMatchers.any;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,13 +27,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.mappers.ClienteMapper;
-import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
-import br.com.compasso.clientes.modelos.enums.Sexo;
 import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
 import br.com.compasso.clientes.modelos.forms.ClienteForm;
 import br.com.compasso.clientes.services.ClienteService;
@@ -44,11 +41,6 @@ import br.com.compasso.clientes.services.ClienteService;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class ClienteControllerTest {
-
-	private static final String NOME = "João";
-	private static final String NOME_POS_UPDATE = "João Silva";
-	private static final String CIDADE = "Porto Alegre";
-	private static final String SIGLA_ESTADO = "RS";
 	
 	@MockBean
 	private ClienteService clienteService;
@@ -59,35 +51,15 @@ class ClienteControllerTest {
 	
 	private ClienteForm clienteForm;
 	private ClienteDTO clienteDto;
-	private AtualizacaoClienteForm atCliForm;
+	private AtualizacaoClienteForm atualizaClienteForm;
 	private Cliente cliente;
-	private Cidade cidade;
-	private Estado estado;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		estado = new Estado(1L, SIGLA_ESTADO);;
-		cidade = new Cidade(1L, CIDADE, estado);
-		
-		LocalDate aniversario = LocalDate.now().minusYears(30);
-		cliente = new Cliente(2L, NOME, aniversario, Sexo.M, cidade);
-		
-		clienteForm = new ClienteForm();
-		clienteForm.setCidadeId(cidade.getId());
-		clienteForm.setDataNascimento(cliente.getDataNascimento());
-		clienteForm.setSexo(cliente.getSexo());
-		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
-	
-		clienteDto = new ClienteDTO();
-		clienteDto.setDataNascimento(cliente.getDataNascimento());
-		clienteDto.setId(cliente.getId());
-		clienteDto.setIdade(cliente.getIdade());
-		clienteDto.setIdCidade(cidade.getId());
-		clienteDto.setNomeCompleto(cliente.getNomeCompleto());
-		clienteDto.setSexo(cliente.getSexo());
-		
-		atCliForm = new AtualizacaoClienteForm();
-		atCliForm.setNomeCompleto(NOME_POS_UPDATE);
+		cliente = ScenarioFactory.criaClienteJoao();
+		clienteForm = ScenarioFactory.criaClienteFormJoao();
+		clienteDto = ScenarioFactory.criaClienteDTOJoao();
+		atualizaClienteForm = ScenarioFactory.criaClienteFormAlteracaoJoao();
 	}
 
 	/**
@@ -282,7 +254,7 @@ class ClienteControllerTest {
 		when(clienteService.alteraCliente(cliente)).thenReturn(cliente);
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/" + cliente.getId())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(asJsonString(atCliForm)))		
+				.content(asJsonString(atualizaClienteForm)))		
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
@@ -298,7 +270,7 @@ class ClienteControllerTest {
 		when(clienteService.alteraCliente(cliente)).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/-1")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(asJsonString(atCliForm)))		
+				.content(asJsonString(atualizaClienteForm)))		
 				.andExpect(status().isNotFound());
 	}
 	
@@ -309,10 +281,10 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void testAlteraNomeClienteComNomeInvalido() throws Exception {
-		atCliForm.setNomeCompleto("");
+		atualizaClienteForm.setNomeCompleto("");
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/" + cliente.getId())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(asJsonString(atCliForm)))		
+				.content(asJsonString(atualizaClienteForm)))		
 				.andExpect(status().isBadRequest());
 	}
 	
