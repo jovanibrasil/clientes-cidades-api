@@ -17,10 +17,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.exceptions.InvalidParameterException;
 import br.com.compasso.clientes.exceptions.NotFoundException;
 import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.repositorios.CidadeRepository;
 import br.com.compasso.clientes.services.impl.CidadeServiceImpl;
 
@@ -34,14 +34,12 @@ class CidadeServiceImplTest {
 	private CidadeRepository cidadeRepository;
 
 	private Cidade cidade;
-	private Estado estado;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
         cidadeService = new CidadeServiceImpl(cidadeRepository);
-		estado = new Estado(0L, "RS");
-		cidade = new Cidade(0L, "Porto Alegre", estado);
+		cidade = ScenarioFactory.criaCidadePoa();
 	}
 
 	/**
@@ -52,7 +50,7 @@ class CidadeServiceImplTest {
 	@Test
 	void testSalvaCidadeComEstadoValido() {
 		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), 
-				estado.getSigla())).thenReturn(Optional.empty());
+				cidade.getEstado().getSigla())).thenReturn(Optional.empty());
 		when(cidadeRepository.save(cidade)).thenReturn(cidade);
 		
 		Cidade cidadeSalva = cidadeService.salvaCidade(cidade);
@@ -68,7 +66,7 @@ class CidadeServiceImplTest {
 	@Test
 	void testSalvaCidadeComEstadoInvalido() {
 		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), 
-				estado.getSigla())).thenReturn(Optional.of(cidade));
+				cidade.getEstado().getSigla())).thenReturn(Optional.of(cidade));
 		
 		assertThrows(InvalidParameterException.class, () -> {
 			cidadeService.salvaCidade(cidade);	

@@ -15,6 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.modelos.Estado;
 
 /**
@@ -36,8 +37,7 @@ class EstadoRepositoryTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		estado = new Estado();
-		estado.setSigla("RS");
+		estado = ScenarioFactory.criaEstadoRSIdNull();
 	}
 
 	/**

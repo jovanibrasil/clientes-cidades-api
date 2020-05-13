@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Estado;
 
@@ -33,14 +34,10 @@ class CidadeRepositoryTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		estado = new Estado();
-		estado.setSigla("RS");
-		estado = estadoRepository.save(estado);
-		cidade1 = new Cidade();
-		cidade1.setNome("Porto Alegre");
+		estado = estadoRepository.save(ScenarioFactory.criaEstadoRSIdNull());
+		cidade1 = ScenarioFactory.criaCidadePoaIdNull();
 		cidade1.setEstado(estado);
-		cidade2 = new Cidade();
-		cidade2.setNome("São Jerônimo");
+		cidade2 = ScenarioFactory.criaCidadeSjIdNull();
 		cidade2.setEstado(estado);
 	}
 

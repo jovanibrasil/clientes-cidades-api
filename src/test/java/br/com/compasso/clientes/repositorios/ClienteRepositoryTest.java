@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +19,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.modelos.Cidade;
 import br.com.compasso.clientes.modelos.Cliente;
 import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.enums.Sexo;
 
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -47,18 +46,12 @@ public class ClienteRepositoryTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		estado = new Estado();
-		estado.setSigla("RS");
-		estado = estadoRepository.save(estado);
-		cidade = new Cidade();
-		cidade.setNome("Porto Alegre");
+		estado = estadoRepository.save(ScenarioFactory.criaEstadoRSIdNull());
+		cidade = ScenarioFactory.criaCidadePoaIdNull();
 		cidade.setEstado(estado);
 		cidade = cidadeRepository.save(cidade);
-		cliente = new Cliente();
+		cliente = ScenarioFactory.criaClienteJoao();
 		cliente.setCidade(cidade);
-		cliente.setNomeCompleto("João Silva");
-		cliente.setSexo(Sexo.M);
-		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
 	}
 	
 	/**
@@ -101,12 +94,9 @@ public class ClienteRepositoryTest {
 	@Test
 	public void testBuscaClientePorNomeComMaisDeUmResultado() {
 		cliente = clienteRepository.save(cliente);
-		Cliente cliente2 = new Cliente();
-		cliente2.setCidade(cidade);
-		cliente2.setDataNascimento(LocalDate.now().minusYears(15));
-		cliente2.setNomeCompleto("Maria Silva");
-		cliente2.setSexo(Sexo.F);
-		clienteRepository.save(cliente2);
+		Cliente clienteMaria = ScenarioFactory.criaClienteMaria();
+		clienteMaria.setCidade(cidade);
+		clienteRepository.save(clienteMaria);
 		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase("Silva");
 		assertEquals(2, clientes.size());
 	}
