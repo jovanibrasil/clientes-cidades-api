@@ -31,6 +31,10 @@ public class ScenarioFactory {
 		return new Cidade(null, CIDADE_POA_NOME, criaEstadoRS());
 	}
 
+	public static Cidade criaCidadePoaIdNull(Estado estado){
+		return new Cidade(null, CIDADE_POA_NOME, estado);
+	}
+	
 	public static Cidade criaCidadeSjIdNull() {
 		return new Cidade(null, CIDADE_SJ_NOME, criaEstadoRS());
 	}
@@ -65,6 +69,16 @@ public class ScenarioFactory {
 		return cliente;
 	}
 
+	public static Cliente criaCliente(String nome, Cidade cidade) {
+		Cliente cliente = new Cliente();
+		cliente.setId(1L);
+		cliente.setCidade(cidade);
+		cliente.setNomeCompleto(nome);
+		cliente.setSexo(Sexo.M);
+		cliente.setDataNascimento(LocalDate.now().minusYears(30L));
+		return cliente;
+	}
+	
 	public static AtualizacaoClienteForm criaClienteFormAlteracaoJoao() {
 		AtualizacaoClienteForm atCliForm = new AtualizacaoClienteForm();
 		atCliForm.setNomeCompleto(NOME_POS_UPDATE);
@@ -107,6 +121,12 @@ public class ScenarioFactory {
 		cliente.setNomeCompleto("Maria Silva");
 		cliente.setSexo(Sexo.F);
 		return cliente;
+	}
+
+	public static Cliente criaClienteJoao(Cidade cidade) {
+		Cliente joao = criaClienteJoao();
+		joao.setCidade(cidade);
+		return joao;
 	}
 	
 }

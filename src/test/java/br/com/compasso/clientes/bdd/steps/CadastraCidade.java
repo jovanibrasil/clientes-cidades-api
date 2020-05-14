@@ -2,17 +2,11 @@ package br.com.compasso.clientes.bdd.steps;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpStatusCodeException;
 
+import br.com.compasso.clientes.modelos.Estado;
 import br.com.compasso.clientes.modelos.forms.CidadeForm;
 import br.com.compasso.clientes.repositorios.EstadoRepository;
 import io.cucumber.datatable.DataTable;
@@ -33,28 +27,16 @@ public class CadastraCidade extends SpringIntegrationTest {
 	 */
 	@Dado("que existe um estado {string} pré-cadastrado sem cidades")
 	public void que_existe_um_estado_pré_cadastrado_sem_cidades(String sigla) {
-		 assertTrue(estadoRepository.findBySigla(sigla).isPresent());
+		limpaBancoDeDados();
+		estadoRepository.save(new Estado(null, sigla));
 	}
 
 	@Quando("é feito um POST para {string} com a cidade no corpo")
 	public void é_feito_um_POST_para_com_a_cidade_no_corpo(String url, DataTable dataTable) {
-	    
-		try {
-			CidadeForm cidadeForm = new CidadeForm();
-			cidadeForm.setNome(dataTable.row(1).get(0));
-			cidadeForm.setEstadoSigla(dataTable.row(1).get(1));
-			
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<String> entity = new HttpEntity<>(asJsonString(cidadeForm), headers);
-			ResponseEntity<?> response = restTemplate.exchange(DEFAULT_URL + url, 
-					HttpMethod.POST, entity, Object.class);
-			estadoCompartilhado.setResponse(response);
-		} catch (HttpStatusCodeException  e) {
-			estadoCompartilhado.setResponse(ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
-                .body(e.getResponseBodyAsString()));
-		}
-	
+		CidadeForm cidadeForm = new CidadeForm();
+		cidadeForm.setNome(dataTable.row(1).get(0));
+		cidadeForm.setEstadoSigla(dataTable.row(1).get(1));
+		post(url, cidadeForm);
 	}
 
 	@Então("o cliente recebe {int} como confirmação de criação")
@@ -80,7 +62,7 @@ public class CadastraCidade extends SpringIntegrationTest {
 
 	@Dado("que não existe um estado {string} cadastrado")
 	public void que_não_existe_um_estado_cadastrado(String sigla) {
-		assertTrue(estadoRepository.findBySigla(sigla).isEmpty());
+		limpaBancoDeDados();
 	}
 	
 	@Então("é retornado código {int} como resultado da operação")
