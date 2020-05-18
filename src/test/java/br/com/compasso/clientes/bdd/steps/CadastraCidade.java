@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.forms.CidadeForm;
-import br.com.compasso.clientes.repositorios.EstadoRepository;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.dominio.form.CidadeForm;
+import br.com.compasso.clientes.repositorio.EstadoRepository;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;

@@ -2,8 +2,8 @@ package br.com.compasso.clientes.bdd.steps;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
+import br.com.compasso.clientes.dominio.Cliente;
+import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;

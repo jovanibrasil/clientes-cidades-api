@@ -14,16 +14,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
-import br.com.compasso.clientes.modelos.enums.Sexo;
-import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.modelos.forms.ClienteForm;
-import br.com.compasso.clientes.services.CidadeService;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Cliente;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.dominio.dto.ClienteDTO;
+import br.com.compasso.clientes.dominio.enumeration.Sexo;
+import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
+import br.com.compasso.clientes.dominio.form.ClienteForm;
+import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.exception.NotFoundException;
+import br.com.compasso.clientes.mapper.ClienteMapperImpl;
+import br.com.compasso.clientes.service.CidadeService;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -56,7 +57,7 @@ class ClienteMapperTest {
 	}
 
 	@Test
-	void testClienteFormToCliente() {
+	void clienteFormToCliente_QuandoClienteFormValido_EsperaClienteValido() {
 		when(cidadeService.buscaPorId(CIDADE_ID)).thenReturn(cidade);
 		
 		ClienteForm clienteForm = new ClienteForm();
@@ -74,7 +75,7 @@ class ClienteMapperTest {
 	}
 	
 	@Test
-	void testClienteFormToClienteIdCidadeInvalido() {
+	void clienteFormToCliente_QuandoIdCidadeInvalido_EsperaNotFoundException() {
 		Long cidadeId = 0L;
 		when(cidadeService.buscaPorId(cidadeId )).thenThrow(NotFoundException.class);
 		
@@ -90,7 +91,7 @@ class ClienteMapperTest {
 	}
 
 	@Test
-	void testAtualizacaoClienteFormToCliente() {
+	void atualizacaoClienteFormToCliente_QuandoFormValido_EsperaClienteValido() {
 		AtualizacaoClienteForm atualizacaoClienteForm = new AtualizacaoClienteForm();
 		String novoNome = "João Silva";
 		atualizacaoClienteForm.setNomeCompleto(novoNome);
@@ -100,7 +101,7 @@ class ClienteMapperTest {
 	}
 
 	@Test
-	void testClienteToClienteDto() {
+	void clienteToClienteDto_QuandoClienteValido_EsperaClienteDtoValido() {
 		ClienteDTO clienteDto = clienteMapper.clienteToClienteDto(cliente);
 		assertEquals(cliente.getId(), clienteDto.getId());
 		assertEquals(cliente.getIdade(), clienteDto.getIdade());
@@ -111,17 +112,17 @@ class ClienteMapperTest {
 	}
 	
 	@Test
-	void testClienteNulltoClienteDto() {
+	void clienteToClienteDto_QuandoClienteNull_EsperaNull() {
 		assertEquals(null, clienteMapper.clienteToClienteDto(null));
 	}
 	
 	@Test
-	void testAtualizacaoClienteNullFormToCliente() {
+	void atualizacaoClienteFormToCliente_QuandoAtualizacaoClienteNull_EsperaNull() {
 		assertEquals(null, clienteMapper.atualizacaoClienteFormToCliente(null));
 	}
 
 	@Test
-	void testClienteFormNullToCliente() {
+	void clienteFormToCliente_QuandoClienteFormNull_EsperaNull() {
 		assertEquals(null, clienteMapper.clienteFormToCliente(null));
 	}
 }

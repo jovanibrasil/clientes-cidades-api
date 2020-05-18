@@ -23,11 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
-import br.com.compasso.clientes.modelos.forms.CidadeForm;
-import br.com.compasso.clientes.services.CidadeService;
+import br.com.compasso.clientes.dominio.dto.CidadeDTO;
+import br.com.compasso.clientes.dominio.form.CidadeForm;
+import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.exception.NotFoundException;
+import br.com.compasso.clientes.service.CidadeService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -55,7 +55,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testCriaCidadeValida() throws Exception {
+	void criaCidade_QuandoCidadeValida_EsperaCreated() throws Exception {
 		when(cidadeService.salvaCidade(any())).thenReturn(cidadeDto);
 		mvc.perform(MockMvcRequestBuilders.post("/cidades")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testCriaCidadeEstadoInvalido() throws Exception {
+	void criaCidade_QuandoComEstadoInvalido_EsperaNotFound() throws Exception {
 		when(cidadeService.salvaCidade(any())).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.post("/cidades")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -83,7 +83,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testCriaCidadeJaExistente() throws Exception {
+	void criaCidade_QuandoJaExistente_EsperaBadRequest() throws Exception {
 		when(cidadeService.salvaCidade(any())).thenThrow(InvalidParameterException.class);
 		mvc.perform(MockMvcRequestBuilders.post("/cidades")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -97,7 +97,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaCidadeSemParametros() throws Exception {
+	void buscaCidade_QuandoSemParametros_EsperaBadRequest() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/cidades"))		
 				.andExpect(status().isBadRequest());
 	}
@@ -108,7 +108,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaCidadePorNome() throws Exception {
+	void buscaCidade_QuandoExisteComNome_EsperaOk() throws Exception {
 		when(cidadeService.buscaPorNome(cidadeForm.getNome())).thenReturn(Arrays.asList(cidadeDto));
 		mvc.perform(MockMvcRequestBuilders.get("/cidades?nome=" + cidadeForm.getNome())
 				.contentType(MediaType.APPLICATION_JSON))		
@@ -121,7 +121,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaCidadeNaoExistentePorNome() throws Exception {
+	void buscaCidade_QuandoNaoExistentePorNome_EsperaNotFound() throws Exception {
 		when(cidadeService.buscaPorNome(cidadeForm.getNome())).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.get("/cidades/" + cidadeForm.getNome())
 				.contentType(MediaType.APPLICATION_JSON))		
@@ -134,7 +134,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaCidadePorEstado() throws Exception {
+	void buscaCidade_QuandoExistePorEstado_EsperaOk() throws Exception {
 		String sigla = cidadeForm.getEstadoSigla();
 		when(cidadeService.buscaPorEstado(sigla)).thenReturn(Arrays.asList(cidadeDto));
 		mvc.perform(MockMvcRequestBuilders.get("/cidades?estadoSigla=" + sigla)
@@ -148,7 +148,7 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaCidadePorEstadoInvalido() throws Exception {
+	void buscaCidade_QuandoEstadoInvalido_EsperaOk() throws Exception {
 		String sigla = "??";
 		when(cidadeService.buscaPorEstado(sigla)).thenReturn(Arrays.asList());
 		mvc.perform(MockMvcRequestBuilders.get("/cidades?estadoSigla=" + sigla)

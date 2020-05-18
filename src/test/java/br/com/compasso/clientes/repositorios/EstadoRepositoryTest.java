@@ -16,7 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.repositorio.EstadoRepository;
 
 /**
  * Testa as operações de salvar e buscar por id um um objeto {link @Estado}. As 
@@ -44,7 +45,7 @@ class EstadoRepositoryTest {
 	 * Testa se  a operação de salvar o estado retorna um estado não nulo.
 	 */
 	@Test
-	void testSalvaEstadoRetornoNaoNulo() {
+	void save_QuandoEstadoValido_EsperaRetornoEstadoNaoNulo() {
 		estado = estadoRepository.save(estado);
 		assertNotNull(estado);
 	}
@@ -53,7 +54,7 @@ class EstadoRepositoryTest {
 	 * Testa se a operação salvar retorna um estado com id não nulo.
 	 */
 	@Test
-	void testSalvaEstadoRetornoComIdValido() {
+	void save_QuandoEstadoValido_EsperaRetornoEstadoComIdValido() {
 		estado = estadoRepository.save(estado);
 		assertNotNull(estado.getId());
 	}
@@ -62,7 +63,7 @@ class EstadoRepositoryTest {
 	 * Testa salvar estado com sigla com mais caracteres que o permitido.
 	 */
 	@Test
-	void testSalvaEstadoSiglaMaiorQuePermitido() {
+	void save_QuandoSiglaMaiorQuePermitido_EsperaDataIntegrityException() {
 		assertThrows(DataIntegrityViolationException.class, () -> {
 			estado.setSigla("COMPASSO-STATE");
 			estadoRepository.save(estado);	
@@ -74,7 +75,7 @@ class EstadoRepositoryTest {
 	 * 
 	 */
 	@Test
-	void testBuscaEstadoExistente() {
+	void findById_QuandoNaoExisteEstadoComId_EsperaOptionalNaoVazio() {
 		estado = estadoRepository.save(estado);
 		assertTrue(estadoRepository.findById(estado.getId()).isPresent());
 	}
@@ -84,7 +85,7 @@ class EstadoRepositoryTest {
 	 * 
 	 */
 	@Test
-	void testBuscaEstadoNaoExistente() {
+	void findById_QuandoNaoExisteEstadoComId_EsperaOptionalVazio() {
 		assertFalse(estadoRepository.findById(-1L).isPresent());
 	}
 	

@@ -1,5 +1,6 @@
 package br.com.compasso.clientes.services.impl;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,13 +23,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.mappers.ClienteMapper;
-import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
-import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.modelos.forms.ClienteForm;
-import br.com.compasso.clientes.repositorios.ClienteRepository;
+import br.com.compasso.clientes.dominio.Cliente;
+import br.com.compasso.clientes.dominio.dto.ClienteDTO;
+import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
+import br.com.compasso.clientes.dominio.form.ClienteForm;
+import br.com.compasso.clientes.exception.NotFoundException;
+import br.com.compasso.clientes.mapper.ClienteMapper;
+import br.com.compasso.clientes.repositorio.ClienteRepository;
+import br.com.compasso.clientes.service.impl.ClienteServiceImpl;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -62,7 +64,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testSalvaCliente() {
+	void salvaCliente_QuandoClienteCorreto_EsperaPorClienteSalvoComIdValido() {
 		when(clienteMapper.clienteFormToCliente(any())).thenReturn(cliente);
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.save(cliente)).then(new Answer<Cliente>() {
@@ -81,7 +83,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaClientePorId() {
+	void buscaPorId_QuandoExisteClienteComId_EsperaClienteNoRetorno() {
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
 		assertNotNull(clientService.buscaPorId(cliente.getId()));
@@ -92,7 +94,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaClienteNaoExistentePorId() {
+	void buscaPorId_QuandoNaoExisteClienteComId_EsperaNotFoundException() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		assertThrows(NotFoundException.class, () -> {
@@ -105,7 +107,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaClientePorNome() {
+	void buscaPorNome_QuandoExisteClienteComNome_EsperaClienteNoRetorno() {
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
 			.thenReturn(Arrays.asList(cliente));
@@ -117,7 +119,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaClienteNaoExistentePorNome() {
+	void buscaPorNome_QuandoNaoExisteClienteComNome_EsperaListaVazia() {
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clientRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto()))
 			.thenReturn(Arrays.asList());
@@ -129,10 +131,12 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testDeleteClientePorId() {
+	void removeCliente_QuandoExisteClienteComId_EsperaNenhumErroOuException() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
 		doNothing().when(clientRepository).delete(cliente);
-		clientService.removeCliente(cliente.getId());
+		assertDoesNotThrow(() -> {
+			clientService.removeCliente(cliente.getId());
+		});
 	}
 	
 	/**
@@ -140,7 +144,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testDeleteClienteNaoExistentePorId() {
+	void removeCliente_QuandoNaoExisteClienteComId_EsperaNotFoundException() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
 		assertThrows(NotFoundException.class, () -> {
 			clientService.removeCliente(cliente.getId());
@@ -152,7 +156,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testAlteraClientePorId() {
+	void alteraCliente_QuandoExisteCliente_EsperaClienteModificadoNoRetorno() {
 		when(clienteMapper.clienteToClienteDto(any())).thenReturn(clienteDto);
 		when(clienteMapper.atualizacaoClienteFormToCliente(any())).thenReturn(cliente);
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
@@ -172,7 +176,7 @@ class ClienteServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testAlteraClienteNaoExistentePorId() {
+	void alteraCliente_QuandoNaoExisteCliente_EsperaNotFoundException() {
 		when(clienteMapper.clienteToClienteDto(cliente)).thenReturn(clienteDto);
 		when(clienteMapper.atualizacaoClienteFormToCliente(any())).thenReturn(cliente);
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());

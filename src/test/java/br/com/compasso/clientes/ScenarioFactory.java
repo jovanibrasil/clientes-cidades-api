@@ -2,15 +2,15 @@ package br.com.compasso.clientes;
 
 import java.time.LocalDate;
 
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
-import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
-import br.com.compasso.clientes.modelos.enums.Sexo;
-import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.modelos.forms.CidadeForm;
-import br.com.compasso.clientes.modelos.forms.ClienteForm;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Cliente;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.dominio.dto.CidadeDTO;
+import br.com.compasso.clientes.dominio.dto.ClienteDTO;
+import br.com.compasso.clientes.dominio.enumeration.Sexo;
+import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
+import br.com.compasso.clientes.dominio.form.CidadeForm;
+import br.com.compasso.clientes.dominio.form.ClienteForm;
 
 public class ScenarioFactory {
 	

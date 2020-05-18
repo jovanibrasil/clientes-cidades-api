@@ -15,12 +15,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
-import br.com.compasso.clientes.modelos.forms.CidadeForm;
-import br.com.compasso.clientes.repositorios.EstadoRepository;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.dominio.dto.CidadeDTO;
+import br.com.compasso.clientes.dominio.form.CidadeForm;
+import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.mapper.CidadeMapperImpl;
+import br.com.compasso.clientes.repositorio.EstadoRepository;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -43,7 +44,7 @@ class CidadeMapperTest {
 	}
 	
 	@Test
-	void testConverteCidadeToCidadeDto() {
+	void cidadeToCidadeDto_QuandoCidadeValida_EsperaCidadeDtoValido() {
 		Cidade cidade = new Cidade();
 		cidade.setId(ID_CIDADE);
 		cidade.setNome(NOME_CIDADE);
@@ -57,7 +58,7 @@ class CidadeMapperTest {
 	}
 
 	@Test
-	void testCidadeFormToCidade() {
+	void cidadeFormToCidade_QuandoCidadeFormValido_EsperaCidadeValida() {
 		Estado estado = new Estado(ID_CIDADE, SIGLA_ESTADO);
 		when(estadoRepository.findBySigla(SIGLA_ESTADO)).thenReturn(Optional.of(estado));
 		
@@ -72,17 +73,17 @@ class CidadeMapperTest {
 	}
 	
 	@Test
-	void testCidadeFormNullToCidade() {
+	void cidadeFormToCidade_QuandoCidadeFormNull_EsperaNull() {
 		assertEquals(null, cidadeMapper.cidadeFormToCidade(null));
 	}
 	
 	@Test
-	void testCidadeToCidadeDto() {
+	void cidadeToCidadeDto_QuandoCidadeNull_EsperaNull() {
 		assertEquals(null, cidadeMapper.cidadeToCidadeDto(null));
 	}
 	
 	@Test
-	void testCidadeFormIdCidadeInvalida() {
+	void cidadeFormToCidade_QuandaCidadeInvalida_EsperaInvalidParameterException() {
 		when(estadoRepository.findBySigla(SIGLA_ESTADO)).thenReturn(Optional.empty());
 		
 		CidadeForm cidadeForm = new CidadeForm();

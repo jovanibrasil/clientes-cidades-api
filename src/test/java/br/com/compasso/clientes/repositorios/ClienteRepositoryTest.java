@@ -20,9 +20,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Cliente;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.repositorio.CidadeRepository;
+import br.com.compasso.clientes.repositorio.ClienteRepository;
+import br.com.compasso.clientes.repositorio.EstadoRepository;
 
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -59,7 +62,7 @@ public class ClienteRepositoryTest {
 	 * 
 	 */
 	@Test
-	public void testSalvaClienteValido() {
+	public void save_QuandoClienteValido_EsperaRetornoClienteSalvo() {
 		cliente = clienteRepository.save(cliente);
 		assertNotNull(cliente.getId());
 		assertNotNull(cliente.getCidade());
@@ -70,18 +73,17 @@ public class ClienteRepositoryTest {
 	 * Testa a busca por ID de um cliente cadastrado no sistema.
 	 */
 	@Test
-	public void testBuscaClientePorId() {
+	public void findById_QuandoClienteExiste_EsperaOptionalNaoVazio() {
 		cliente = clienteRepository.save(cliente);
 		Optional<Cliente> optClient = clienteRepository.findById(cliente.getId());
 		assertTrue(optClient.isPresent());
-		assertEquals(cliente.getId(), optClient.get().getId());
 	}
 	
 	/**
 	 * Testa a busca por Nome de um cliente cadastrado no sistema.
 	 */
 	@Test
-	public void testBuscaClientePorNome() {
+	public void findByNomeCompletoContainingIgnoreCase_QuandoExisteUmCliente_EsperaListaComUmCliente() {
 		cliente = clienteRepository.save(cliente);
 		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto());
 		assertEquals(1, clientes.size());
@@ -92,7 +94,7 @@ public class ClienteRepositoryTest {
 	 * de um registro para o nome informado.
 	 */
 	@Test
-	public void testBuscaClientePorNomeComMaisDeUmResultado() {
+	public void findByNomeCompletoContainingIgnoreCase_QuandoExisteDoisCliente_EsperaListaComDoisClientes() {
 		cliente = clienteRepository.save(cliente);
 		Cliente clienteMaria = ScenarioFactory.criaClienteMaria();
 		clienteMaria.setCidade(cidade);
