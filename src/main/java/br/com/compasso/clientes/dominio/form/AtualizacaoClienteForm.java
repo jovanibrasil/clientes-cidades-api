@@ -7,7 +7,8 @@ import javax.validation.constraints.Size;
 import io.swagger.annotations.ApiModelProperty;
 
 public class AtualizacaoClienteForm {
-
+	
+	@ApiModelProperty(hidden = true)
 	@Null
 	private Long id;
 	
