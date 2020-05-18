@@ -14,8 +14,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.repositorio.CidadeRepository;
+import br.com.compasso.clientes.repositorio.EstadoRepository;
 
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -45,7 +47,7 @@ class CidadeRepositoryTest {
 	 * Testa se a operação de salvar cidade retorna não nulo.
 	 */
 	@Test
-	void testSalvaCidadeRetornoNaoNulo() {
+	void save_QuandoCidadeValida_EsperaRetornoNaoNulo() {
 		cidade1 = cidadeRepository.save(cidade1);
 		assertNotNull(cidade1);
 	}
@@ -54,7 +56,7 @@ class CidadeRepositoryTest {
 	 * Testa se a operação de salvar gerou o id para a entidade.
 	 */
 	@Test
-	void testSalvaCidadeIdNaoNulo() {
+	void save_QuandoCidadeValida_EsperaRetornoCidadeIdNaoNulo() {
 		cidade1 = cidadeRepository.save(cidade1);
 		assertNotNull(cidade1.getId());
 	}
@@ -63,7 +65,7 @@ class CidadeRepositoryTest {
 	 * Testa salvar a cidade com nome com mais caracteres que o permitido.
 	 */
 	@Test
-	void testSalvaCidadeComNomeMaiorQueMaximoPossivel() {
+	void save_CidadeComNomeMaiorQueMaximoPossivel_EsperaDataIntegrityViolationException() {
 		assertThrows(DataIntegrityViolationException.class, () -> {
 			cidade1.setNome(StringUtils.repeat("*", 40));
 			cidadeRepository.save(cidade1);
@@ -74,7 +76,7 @@ class CidadeRepositoryTest {
 	 * Busca uma cidade existente por id
 	 */
 	@Test
-	void testBuscaCidadeExistente() {
+	void findById_QuandoCidadeExiste_EsperaOptionalNaoVazio() {
 		cidade1 = cidadeRepository.save(cidade1);
 		assertTrue(cidadeRepository.findById(cidade1.getId()).isPresent());
 	}
@@ -83,7 +85,7 @@ class CidadeRepositoryTest {
 	 * Busca uma cidade não existente por id
 	 */
 	@Test
-	void testBuscaCidadeNaoExistente() {
+	void findById_QuandoCidadeNaoExiste_EsperaOptionalVazio() {
 		assertFalse(cidadeRepository.findById(-1L).isPresent());
 	}
 	
@@ -91,7 +93,7 @@ class CidadeRepositoryTest {
 	 * Busca uma cidade existente por nome.
 	 */
 	@Test
-	void testBuscaPorNomeCidadeExistente() {
+	void findByNomeIgnoreCase_QuandoUmaCidadeExiste_EsperaListaComUmaCidade() {
 		cidade1 = cidadeRepository.save(cidade1);
 		assertEquals(1, cidadeRepository.findByNomeIgnoreCase(cidade1.getNome()).size());
 	}
@@ -100,7 +102,7 @@ class CidadeRepositoryTest {
 	 * Busca uma cidade não existente por nome.
 	 */
 	@Test
-	void testBuscaPorNomeCidadeNaoExistente() {
+	void findByNomeIgnoreCase_QuandoNenhumaCidadeExiste_EsperaListaVazia() {
 		assertEquals(0, cidadeRepository.findByNomeIgnoreCase("São Paulo").size());
 	}
 	
@@ -108,7 +110,7 @@ class CidadeRepositoryTest {
 	 * Lista cidades de um estado existente.
 	 */
 	@Test
-	void testBuscaCidadesPorNomeEstadoExistente() {
+	void findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase_QuandoEstadoExiste_EsperaOptionalNaoVazio() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
 		assertTrue(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase("Porto Alegre", "RS").isPresent());
@@ -118,7 +120,7 @@ class CidadeRepositoryTest {
 	 * Lista cidades de um estado não existente.
 	 */
 	@Test
-	void testBuscaCidadesPorNomeEstadoNaoExistente() {
+	void findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase_QuandoEstadoNaoExiste_EsperaOptionalVazio() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
 		assertTrue(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase("Sampa", "SP").isEmpty());

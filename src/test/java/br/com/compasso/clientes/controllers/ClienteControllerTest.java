@@ -28,13 +28,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.modelos.Cliente;
-import br.com.compasso.clientes.modelos.dtos.ClienteDTO;
-import br.com.compasso.clientes.modelos.forms.AtualizacaoClienteForm;
-import br.com.compasso.clientes.modelos.forms.ClienteForm;
-import br.com.compasso.clientes.services.ClienteService;
+import br.com.compasso.clientes.dominio.Cliente;
+import br.com.compasso.clientes.dominio.dto.ClienteDTO;
+import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
+import br.com.compasso.clientes.dominio.form.ClienteForm;
+import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.exception.NotFoundException;
+import br.com.compasso.clientes.service.ClienteService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -67,7 +67,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testSalvaClienteValido() throws Exception {
+	void salvaCliente_QuandoClienteValido_EsperaIsCreated() throws Exception {
 		when(clienteService.salvaCliente(any())).thenReturn(clienteDto);
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +82,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testSalvaClienteComCidadeNaoExistente() throws Exception {
+	void salvaCliente_QuandoCidadeNaoExistente_EsperaBadRequest() throws Exception {
 		when(clienteService.salvaCliente(any())).thenThrow(InvalidParameterException.class);
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -96,7 +96,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testSalvaClienteComNascimentoNoFuturo() throws Exception {
+	void salvaCliente_QuandoNascimentoNoFuturo_EsperaBadRequest() throws Exception {
 		clienteForm.setDataNascimento(LocalDate.now().plusYears(5));
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testSalvaClienteComNomeEmBranco() throws Exception {
+	void salvaCliente_QuandoNomeEmBranco_EsperaBadRequest() throws Exception {
 		clienteForm.setNomeCompleto("     ");
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +127,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testSalvaClienteComNomeMaiorQueMaximo() throws Exception {
+	void salvaCliente_QuandoTamanhoNomeMaiorQueMaximo_EsperaBadRequest() throws Exception {
 		clienteForm.setNomeCompleto(StringUtils.repeat("*", 100));
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +141,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testSalvaClienteComSexoNulo() throws Exception {
+	void salvaCliente_QuandoSexoNulo_EsperaBadRequest() throws Exception {
 		clienteForm.setSexo(null);
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -155,7 +155,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaClientePorId() throws Exception {
+	void buscaClientePorId_QuandoClienteExiste_EsperaOkBodyNaoVazio() throws Exception {
 		when(clienteService.buscaPorId(cliente.getId())).thenReturn(clienteDto);
 		mvc.perform(MockMvcRequestBuilders.get("/clientes/" + cliente.getId()))		
 				.andExpect(status().isOk())
@@ -168,7 +168,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaClienteNaoExistentePorId() throws Exception {
+	void buscaClientePorId_QuandoClienteNaoExisteComId_EsperaNotFound() throws Exception {
 		when(clienteService.buscaPorId(cliente.getId())).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.get("/clientes/" + cliente.getId()))		
 				.andExpect(status().isNotFound());
@@ -180,7 +180,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaClientePorNome() throws Exception {
+	void buscaClientePorNome_QuandoClienteExiste_EsperaOkBodyNaoVazio() throws Exception {
 		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(clienteDto));
 		mvc.perform(MockMvcRequestBuilders.get("/clientes?nome=" + cliente.getNomeCompleto()))		
 				.andExpect(status().isOk())
@@ -194,7 +194,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaClienteSemParametros() throws Exception {
+	void buscaCliente_QuandoSemParametros_EsperaBadRequest() throws Exception {
 		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenReturn(Arrays.asList(clienteDto));
 		mvc.perform(MockMvcRequestBuilders.get("/clientes"))		
 				.andExpect(status().isBadRequest());
@@ -207,7 +207,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testBuscaClienteNaoExistentePorNome() throws Exception {
+	void buscaClientePorId_QuandoClienteNaoExiste_EsperaRetornoNotFound() throws Exception {
 		when(clienteService.buscaPorNome(cliente.getNomeCompleto())).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.get("/clientes?nome=" + cliente.getNomeCompleto()))		
 				.andExpect(status().isNotFound());
@@ -219,7 +219,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testDeleteClienteNaoExistentePorId() throws Exception {
+	void removeCliente_QuandoClienteNaoExiste_EsperaNotFound() throws Exception {
 		doThrow(NotFoundException.class).when(clienteService).removeCliente(-1L);
 		mvc.perform(MockMvcRequestBuilders.delete("/clientes/-1"))		
 				.andExpect(status().isNotFound());
@@ -231,7 +231,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testDeleteClientePorId() throws Exception {
+	void removeCliente_QuandoClienteExiste_EsperaNoContent() throws Exception {
 		doNothing().when(clienteService).removeCliente(cliente.getId());
 		mvc.perform(MockMvcRequestBuilders.delete("/clientes/"+cliente.getId()))		
 				.andExpect(status().isNoContent());
@@ -243,7 +243,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testAlteraNomeCliente() throws Exception {
+	void atualizaCliente_QuandoNomeValido_EsperaOkBodyNaoVazio() throws Exception {
 		when(clienteService.alteraCliente(any())).thenReturn(clienteDto);
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/" + cliente.getId())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -258,7 +258,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testAlteraNomeClienteNaoExistente() throws Exception {
+	void atualizaCliente_QuandoClienteNaoExistente_EsperaNotFound() throws Exception {
 		when(clienteService.alteraCliente(any())).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/-1")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -272,7 +272,7 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testAlteraNomeClienteComNomeInvalido() throws Exception {
+	void atualizaCliente_QuandoComNomeInvalido_EsperaBadRequest() throws Exception {
 		atualizaClienteForm.setNomeCompleto("");
 		mvc.perform(MockMvcRequestBuilders.patch("/clientes/" + cliente.getId())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)

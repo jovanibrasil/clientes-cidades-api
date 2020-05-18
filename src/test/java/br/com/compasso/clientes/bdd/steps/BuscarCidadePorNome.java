@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Estado;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;

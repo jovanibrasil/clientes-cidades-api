@@ -1,8 +1,8 @@
 package br.com.compasso.clientes.bdd.steps;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Estado;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Estado;
 import io.cucumber.java.pt.Dado;
 
 public class BuscaClientePorNome extends SpringIntegrationTest {

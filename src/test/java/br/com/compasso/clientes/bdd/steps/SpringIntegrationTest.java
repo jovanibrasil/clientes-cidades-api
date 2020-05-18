@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.compasso.clientes.repositorios.CidadeRepository;
-import br.com.compasso.clientes.repositorios.ClienteRepository;
-import br.com.compasso.clientes.repositorios.EstadoRepository;
+import br.com.compasso.clientes.repositorio.CidadeRepository;
+import br.com.compasso.clientes.repositorio.ClienteRepository;
+import br.com.compasso.clientes.repositorio.EstadoRepository;
 
 
 public abstract class SpringIntegrationTest {

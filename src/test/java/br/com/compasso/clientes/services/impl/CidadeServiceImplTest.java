@@ -19,14 +19,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.exceptions.InvalidParameterException;
-import br.com.compasso.clientes.exceptions.NotFoundException;
-import br.com.compasso.clientes.mappers.CidadeMapper;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.dtos.CidadeDTO;
-import br.com.compasso.clientes.modelos.forms.CidadeForm;
-import br.com.compasso.clientes.repositorios.CidadeRepository;
-import br.com.compasso.clientes.services.impl.CidadeServiceImpl;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.dto.CidadeDTO;
+import br.com.compasso.clientes.dominio.form.CidadeForm;
+import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.exception.NotFoundException;
+import br.com.compasso.clientes.mapper.CidadeMapper;
+import br.com.compasso.clientes.repositorio.CidadeRepository;
+import br.com.compasso.clientes.service.impl.CidadeServiceImpl;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -64,7 +64,7 @@ class CidadeServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testSalvaCidadeComEstadoValido() {
+	void salvaCidade_QuandoEstadoValido_EsperaPorCidadeSalvaComIdNaoNulo() {
 		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), 
 				cidade.getEstado().getSigla())).thenReturn(Optional.empty());
 		when(cidadeRepository.save(cidade)).thenReturn(cidade);
@@ -80,7 +80,7 @@ class CidadeServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testSalvaCidadeComEstadoInvalido() {
+	void salvaCidade_QuandoEstadoInvalido_EsperaPorInvalidParameterException() {
 		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), 
 				cidade.getEstado().getSigla())).thenReturn(Optional.of(cidade));
 		
@@ -94,7 +94,7 @@ class CidadeServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaPorNome() {
+	void buscaPorNome_QuandoExisteCidadeComNome_EsperaRetornoCidade() {
 		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList(cidade));	
 		List<CidadeDTO> cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
 		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
@@ -105,7 +105,7 @@ class CidadeServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaPorNomeNaoExistente() {
+	void buscaPorNome_QuandoNaoExisteCidadeComNome_EsperaRetornoListaVazia() {
 		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList());	
 		assertEquals(0, cidadeService.buscaPorNome(cidade.getNome()).size());
 	}
@@ -115,7 +115,7 @@ class CidadeServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaPorId() {
+	void buscaPorId_QuandoCidadeComIdExiste_EsperaRetornaCidade() {
 		when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.of(cidade));	
 		Cidade cidadeSalva = cidadeService.buscaPorId(cidade.getId());
 		assertEquals(cidade.getId(), cidadeSalva.getId());
@@ -126,7 +126,7 @@ class CidadeServiceImplTest {
 	 * 
 	 */
 	@Test
-	void testBuscaPorIdCidadeNaoExistente() {
+	void buscaPorId_QuandoCidadeComIdNaoExiste_EsperaLancamentoNotFoundException() {
 		when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());	
 		assertThrows(NotFoundException.class, () -> {
 			cidadeService.buscaPorId(cidade.getId());
@@ -137,7 +137,7 @@ class CidadeServiceImplTest {
 	 * Faz uma busca de cidade por estado, sendo que o estado possui uma cidade.
 	 */
 	@Test
-	void testBuscaDeCidadePorEstado() {
+	void buscaPorEstado_QuandoEstadoPossuiUmaCidade_EsperaListaComUmaCidade() {
 		String estadoSigla = cidade.getEstado().getSigla();
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList(cidade));	
 		assertEquals(1, cidadeService.buscaPorEstado(estadoSigla).size());
@@ -147,7 +147,7 @@ class CidadeServiceImplTest {
 	 * Faz uma busca de cidade por estado que não existe.
 	 */
 	@Test
-	void testBuscaDeCidadePorEstadoQueNaoExiste() {
+	void buscaPorEstado_QuandoEstadoNaoExiste_EsperaListaVazia() {
 		String estadoSigla = "??";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
 		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
@@ -155,10 +155,10 @@ class CidadeServiceImplTest {
 	}
 	
 	/**
-	 * Faz uma busca de cidade por estado que não existe.
+	 * Faz uma busca de cidade que não possui cidades cadastradas.
 	 */
 	@Test
-	void testBuscaDeCidadePorEstadoSemCidade() {
+	void buscaPorEstado_QuandoEstadoNaoTemCidadesCadastradas_EsperaListaVazia() {
 		String estadoSigla = "AM";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
 		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());

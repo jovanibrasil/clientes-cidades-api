@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import br.com.compasso.clientes.ScenarioFactory;
-import br.com.compasso.clientes.modelos.Cidade;
-import br.com.compasso.clientes.modelos.Estado;
-import br.com.compasso.clientes.modelos.enums.Sexo;
-import br.com.compasso.clientes.modelos.forms.ClienteForm;
+import br.com.compasso.clientes.dominio.Cidade;
+import br.com.compasso.clientes.dominio.Estado;
+import br.com.compasso.clientes.dominio.enumeration.Sexo;
+import br.com.compasso.clientes.dominio.form.ClienteForm;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Quando;
