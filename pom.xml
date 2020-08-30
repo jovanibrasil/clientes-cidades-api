@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.compasso.clientes</groupId>
-	<artifactId>clientes-api</artifactId>
+	<artifactId>clientes-cidades-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>clientes-api</name>
+	<name>clientes-cidades-api</name>
 	<description>Desafio Compasso - Raia Drogasil</description>
 
 	<properties>
