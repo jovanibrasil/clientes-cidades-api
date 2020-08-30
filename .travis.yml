@@ -1,0 +1,13 @@
+language: java
+jdk:
+  - openjdk11
+addons:
+  sonarcloud:
+    organization: $SONAR_ORGANIZATION
+    token: $SONAR_LOGIN
+before_install:
+  - chmod +x mvnw
+script:
+  - mvn -Ptest test -B sonar:sonar
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
