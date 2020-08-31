@@ -1,6 +1,7 @@
 package br.com.compasso.clientes.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.compasso.clientes.dominio.dto.CidadeDTO;
 import br.com.compasso.clientes.dominio.form.CidadeForm;
+import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.exception.Messages;
 import br.com.compasso.clientes.service.CidadeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -57,7 +60,7 @@ public class CidadeController {
 		@ApiResponse(code = 200, message = "Resultado encontrado.", response = Object.class),
 		@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@GetMapping
-	public ResponseEntity<?> buscaCidade(@RequestParam(required = false) String nome, 
+	public ResponseEntity<List<CidadeDTO>> buscaCidade(@RequestParam(required = false) String nome, 
 			@RequestParam(required = false) String estadoSigla) {
 		// Chama serviço de acordo com o parâmetro passado
 		if(nome != null) {
@@ -65,7 +68,7 @@ public class CidadeController {
 		} else if(estadoSigla != null) {
 			return ResponseEntity.ok(cidadeService.buscaPorEstado(estadoSigla));
 		}
-		return ResponseEntity.badRequest().build();
+		throw new InvalidParameterException(Messages.PARAMETRO_REQUERIDO);
 	}
 	
 }

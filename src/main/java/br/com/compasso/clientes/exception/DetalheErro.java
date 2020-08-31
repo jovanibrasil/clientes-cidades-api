@@ -51,8 +51,6 @@ public class DetalheErro<T> {
 		private String objectName;
 		private T errors;
 
-		public Builder() {}
-
 		public Builder<T> message(String message) {
 			this.message = message;
 			return this;
@@ -84,7 +82,7 @@ public class DetalheErro<T> {
 		}
 
 		public DetalheErro<T> build() {
-			return new DetalheErro<T>(this);
+			return new DetalheErro<>(this);
 		}
 
 	}

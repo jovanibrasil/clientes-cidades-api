@@ -64,8 +64,8 @@ class EstadoRepositoryTest {
 	 */
 	@Test
 	void save_QuandoSiglaMaiorQuePermitido_EsperaDataIntegrityException() {
+		estado.setSigla("COMPASSO-STATE");
 		assertThrows(DataIntegrityViolationException.class, () -> {
-			estado.setSigla("COMPASSO-STATE");
 			estadoRepository.save(estado);	
 		});
 	}

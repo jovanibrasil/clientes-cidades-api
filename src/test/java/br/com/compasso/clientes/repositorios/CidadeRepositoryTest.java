@@ -66,8 +66,8 @@ class CidadeRepositoryTest {
 	 */
 	@Test
 	void save_CidadeComNomeMaiorQueMaximoPossivel_EsperaDataIntegrityViolationException() {
+		cidade1.setNome(StringUtils.repeat("*", 40));
 		assertThrows(DataIntegrityViolationException.class, () -> {
-			cidade1.setNome(StringUtils.repeat("*", 40));
 			cidadeRepository.save(cidade1);
 		});
 	}

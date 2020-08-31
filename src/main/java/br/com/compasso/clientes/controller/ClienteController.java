@@ -1,6 +1,7 @@
 package br.com.compasso.clientes.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -64,7 +65,7 @@ public class ClienteController {
 		@ApiResponse(code = 400, message = "Requisição inválida."),
 		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@GetMapping("/{id}")
-	public ResponseEntity<?> buscaCliente(@PathVariable Long id){
+	public ResponseEntity<ClienteDTO> buscaCliente(@PathVariable Long id){
 		return ResponseEntity.ok(clienteService.buscaPorId(id));
 	}
 	
@@ -79,7 +80,7 @@ public class ClienteController {
 		@ApiResponse(code = 200, message = "Resultado da busca encontrado.", response = Object.class),
 		@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@GetMapping
-	public ResponseEntity<?> buscaCliente(@RequestParam(required = true) String nome){
+	public ResponseEntity<List<ClienteDTO>> buscaCliente(@RequestParam(required = true) String nome){
 		return ResponseEntity.ok(clienteService.buscaPorNome(nome));
 	}
 	

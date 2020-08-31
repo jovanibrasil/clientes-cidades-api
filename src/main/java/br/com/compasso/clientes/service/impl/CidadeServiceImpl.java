@@ -11,6 +11,7 @@ import br.com.compasso.clientes.dominio.Cidade;
 import br.com.compasso.clientes.dominio.dto.CidadeDTO;
 import br.com.compasso.clientes.dominio.form.CidadeForm;
 import br.com.compasso.clientes.exception.InvalidParameterException;
+import br.com.compasso.clientes.exception.Messages;
 import br.com.compasso.clientes.exception.NotFoundException;
 import br.com.compasso.clientes.mapper.CidadeMapper;
 import br.com.compasso.clientes.repositorio.CidadeRepository;
@@ -48,7 +49,7 @@ public class CidadeServiceImpl implements CidadeService {
 	@Override
 	public Cidade buscaPorId(Long cidadeId) {
 		return cidadeRepository.findById(cidadeId).orElseThrow(() -> 
-			new NotFoundException("Cidade com id=" + cidadeId + " não encontrada."));
+			new NotFoundException(Messages.CIDADE_NAO_ENCONTRADA + cidadeId));
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class CidadeServiceImpl implements CidadeService {
 		
 		cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(), cidade.getEstado().getSigla())
 			.ifPresent(cliente -> { 
-				throw new InvalidParameterException("A cidade " + cidade.getNome() + " já existe neste estado."); 
+				throw new InvalidParameterException(Messages.CIDADE_JA_CADASTRADA + cidadeForm.getNome()); 
 			});
 		return cidadeMapper.cidadeToCidadeDto(cidadeRepository.save(cidade));
 	}

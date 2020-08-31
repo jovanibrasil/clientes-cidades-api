@@ -31,7 +31,7 @@ import br.com.compasso.clientes.repositorio.EstadoRepository;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class ClienteRepositoryTest {
+class ClienteRepositoryTest {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -62,7 +62,7 @@ public class ClienteRepositoryTest {
 	 * 
 	 */
 	@Test
-	public void save_QuandoClienteValido_EsperaRetornoClienteSalvo() {
+	void save_QuandoClienteValido_EsperaRetornoClienteSalvo() {
 		cliente = clienteRepository.save(cliente);
 		assertNotNull(cliente.getId());
 		assertNotNull(cliente.getCidade());
@@ -73,7 +73,7 @@ public class ClienteRepositoryTest {
 	 * Testa a busca por ID de um cliente cadastrado no sistema.
 	 */
 	@Test
-	public void findById_QuandoClienteExiste_EsperaOptionalNaoVazio() {
+	void findById_QuandoClienteExiste_EsperaOptionalNaoVazio() {
 		cliente = clienteRepository.save(cliente);
 		Optional<Cliente> optClient = clienteRepository.findById(cliente.getId());
 		assertTrue(optClient.isPresent());
@@ -83,7 +83,7 @@ public class ClienteRepositoryTest {
 	 * Testa a busca por Nome de um cliente cadastrado no sistema.
 	 */
 	@Test
-	public void findByNomeCompletoContainingIgnoreCase_QuandoExisteUmCliente_EsperaListaComUmCliente() {
+	void findByNomeCompletoContainingIgnoreCase_QuandoExisteUmCliente_EsperaListaComUmCliente() {
 		cliente = clienteRepository.save(cliente);
 		List<Cliente> clientes = clienteRepository.findByNomeCompletoContainingIgnoreCase(cliente.getNomeCompleto());
 		assertEquals(1, clientes.size());
@@ -94,7 +94,7 @@ public class ClienteRepositoryTest {
 	 * de um registro para o nome informado.
 	 */
 	@Test
-	public void findByNomeCompletoContainingIgnoreCase_QuandoExisteDoisCliente_EsperaListaComDoisClientes() {
+	void findByNomeCompletoContainingIgnoreCase_QuandoExisteDoisCliente_EsperaListaComDoisClientes() {
 		cliente = clienteRepository.save(cliente);
 		Cliente clienteMaria = ScenarioFactory.criaClienteMaria();
 		clienteMaria.setCidade(cidade);
