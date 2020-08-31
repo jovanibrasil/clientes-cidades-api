@@ -1,12 +1,17 @@
 # Desafio Microservice Spring Boot
 
+[![Build Status](https://travis-ci.org/jovanibrasil/clientes-cidades-api.svg?branch=master)](https://travis-ci.org/jovanibrasil/clientes-cidades-api)
+![Codecov branch](https://img.shields.io/codecov/c/github/jovanibrasil/clientes-cidades-api/develop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=br.com.compasso.clientes%3Aclientes-cidades-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=br.com.compasso.clientes%3Aclientes-cidades-api)
+
+
 ## Instruções de execução
 
-Para executar a aplicação basta executar o comando ```mvn spring-boot:run```. Este comando executá a aplicação no perfil dev usando o banco em memória H2, sendo suficiente para teste da aplicação. Se você preferir pode executar no perfil stage, onde o objetivo é executar com uma configuração próxima a de produção. Primeiro você precisará ter um Mysql devidamente configurado para só então executar o comando ```mvn spring-boot:run -Pstage```. [Neste diretório](/mysql-docker) você encontra um Mysql containerizado (dockerizado) que você pode executar utilizando os comandos que se encontram no Makefile do diretório. 
+Para executar a aplicação basta executar o comando ```mvn spring-boot:run```. Este comando executá a aplicação no perfil dev usando o banco em memória H2, sendo suficiente para teste da aplicação. Se você preferir pode executar no perfil stage, onde o objetivo é executar com uma configuração próxima a de produção. Primeiro você precisará ter um MySQL devidamente configurado para só então executar o comando ```mvn spring-boot:run -Pstage```. [Neste diretório](/mysql-docker) você encontra um MySQL containerizado (dockerizado) que você pode executar utilizando os comandos que se encontram no Makefile do diretório. 
 
-Se você quiser executar os testes basta executar o comando ```mvn test -Ptest```. Serão executados todos os testes unitários (Junit e Mockito) e de integração (Cucumber). 
+Se você quiser executar os testes basta executar o comando ```mvn test -Ptest```. Serão executados todos os testes unitários (usando Junit e Mockito) e de integração (usando Cucumber). 
 
-A documentação Swagger da API pode ser conferida [aqui](http://localhost:8080/swagger-ui.html) se você estiver rodando localmente a aplicação neste momento. E por comodidade em breve ela também estará disponível online. 
+A documentação Swagger da API pode ser conferida [aqui](http://localhost:8080/swagger-ui.html) se você estiver rodando localmente a aplicação neste momento. 
 
 Qualquer dúvida estou a disposição.
 
