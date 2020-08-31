@@ -134,8 +134,9 @@ class ClienteServiceImplTest {
 	void removeCliente_QuandoExisteClienteComId_EsperaNenhumErroOuException() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
 		doNothing().when(clientRepository).delete(cliente);
+		Long clienteId = cliente.getId();
 		assertDoesNotThrow(() -> {
-			clientService.removeCliente(cliente.getId());
+			clientService.removeCliente(clienteId);
 		});
 	}
 	
@@ -146,8 +147,9 @@ class ClienteServiceImplTest {
 	@Test
 	void removeCliente_QuandoNaoExisteClienteComId_EsperaNotFoundException() {
 		when(clientRepository.findById(cliente.getId())).thenReturn(Optional.empty());
+		Long clienteId = cliente.getId();
 		assertThrows(NotFoundException.class, () -> {
-			clientService.removeCliente(cliente.getId());
+			clientService.removeCliente(clienteId);
 		}); 
 	}
 	
