@@ -54,8 +54,7 @@ class CidadeServiceImplTest {
 		cidadeDto = ScenarioFactory.criaCidadeDtoPoa();
 		
 		when(cidadeMapper.cidadeFormToCidade(any())).thenReturn(cidade);
-		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);
-		
+		when(cidadeMapper.cidadeToCidadeDto(cidade)).thenReturn(cidadeDto);	
 	}
 
 	/**
@@ -128,8 +127,9 @@ class CidadeServiceImplTest {
 	@Test
 	void buscaPorId_QuandoCidadeComIdNaoExiste_EsperaLancamentoNotFoundException() {
 		when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());	
+		Long cidadeId = cidade.getId();
 		assertThrows(NotFoundException.class, () -> {
-			cidadeService.buscaPorId(cidade.getId());
+			cidadeService.buscaPorId(cidadeId);
 		});
 	}
 	
@@ -151,7 +151,6 @@ class CidadeServiceImplTest {
 		String estadoSigla = "??";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
 		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
-		
 	}
 	
 	/**
@@ -161,8 +160,7 @@ class CidadeServiceImplTest {
 	void buscaPorEstado_QuandoEstadoNaoTemCidadesCadastradas_EsperaListaVazia() {
 		String estadoSigla = "AM";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
-		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
-		
+		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());	
 	}
 	
 }

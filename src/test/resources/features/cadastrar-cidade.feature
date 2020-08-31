@@ -10,8 +10,6 @@ Funcionalidade: Cadastrar cidade
 			| nomeCidade 		| estadoSigla |
 			| Porto Alegre	| RS 					|
 		Então é retornado código 201 como resultado da operação
-		E o corpo da mensagem é vazio
-		E possui o endereço do recurso no cabeçalho
 		
 	Cenário: Cadastrar uma cidade com estado inválido no sistema
 		Dado que não existe um estado "XX" cadastrado

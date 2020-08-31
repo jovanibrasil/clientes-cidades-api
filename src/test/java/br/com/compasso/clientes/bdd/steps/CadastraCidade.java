@@ -1,7 +1,6 @@
 package br.com.compasso.clientes.bdd.steps;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +42,6 @@ public class CadastraCidade extends SpringIntegrationTest {
 	public void o_cliente_recebe_como_confirmação_de_criação(Integer int1) {
 	    // Write code here that turns the phrase above into concrete actions
 	    assertEquals(int1, estadoCompartilhado.getResponse().getStatusCodeValue());
-	}
-	
-	@E("o corpo da mensagem é vazio")
-	public void o_corpo_da_mensagem_é_vazio() {
-	    // Write code here that turns the phrase above into concrete actions
-		assertNull(estadoCompartilhado.getResponse().getBody());
 	}
 	
 	@E("possui o endereço do recurso no cabeçalho")

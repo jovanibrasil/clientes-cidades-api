@@ -11,6 +11,7 @@ import br.com.compasso.clientes.dominio.Cliente;
 import br.com.compasso.clientes.dominio.dto.ClienteDTO;
 import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
 import br.com.compasso.clientes.dominio.form.ClienteForm;
+import br.com.compasso.clientes.exception.Messages;
 import br.com.compasso.clientes.exception.NotFoundException;
 import br.com.compasso.clientes.mapper.ClienteMapper;
 import br.com.compasso.clientes.repositorio.ClienteRepository;
@@ -42,10 +43,10 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public ClienteDTO buscaPorId(Long clienteId) throws NotFoundException {
+	public ClienteDTO buscaPorId(Long clienteId) {
 		return clienteRepository.findById(clienteId)
 			.map(clienteMapper::clienteToClienteDto)
-			.orElseThrow(() -> new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado"));
+			.orElseThrow(() -> new NotFoundException(Messages.USUARIO_NAO_ENCONTRADO + clienteId));
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class ClienteServiceImpl implements ClienteService {
 				clienteSalvo.setNomeCompleto(atualizaClienteForm.getNomeCompleto());		
 				return clienteMapper.clienteToClienteDto(clienteRepository.save(clienteSalvo));
 			})
-			.orElseThrow(() -> new NotFoundException("Cliente com id=" + atualizaClienteForm.getId() + " não foi encontrado"));
+			.orElseThrow(() -> new NotFoundException(Messages.USUARIO_NAO_ENCONTRADO + atualizaClienteForm.getId()));
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class ClienteServiceImpl implements ClienteService {
 			.ifPresentOrElse(
 					clienteRepository::delete,
 					() -> { 
-						throw new NotFoundException("Cliente com id=" + clienteId + " não foi encontrado"); 
+						throw new NotFoundException(Messages.USUARIO_NAO_ENCONTRADO + clienteId); 
 					}
 			);
 	}
