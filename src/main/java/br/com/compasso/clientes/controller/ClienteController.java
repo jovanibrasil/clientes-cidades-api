@@ -44,10 +44,13 @@ public class ClienteController {
 
 	@ApiOperation(value = "Cria cliente.", notes = "Cria um cliente no sistema. ")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "Criado com sucesso.", responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),
+			@ApiResponse(code = 201, message = "Criado com sucesso.", 
+					response = Object.class,
+					responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),
 			@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@PostMapping
-	public ResponseEntity<Void> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<ClienteDTO> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
 		log.info("Criando cliente {}", clienteForm.getNomeCompleto());
 		ClienteDTO clienteSalvo = clienteService.salvaCliente(clienteForm);
 		URI uri = ServletUriComponentsBuilder
@@ -55,7 +58,7 @@ public class ClienteController {
 				.path("/{clienteId}")
 				.buildAndExpand(clienteSalvo.getId())
 				.toUri();
-		return ResponseEntity.created(uri).build();
+		return ResponseEntity.created(uri).body(clienteSalvo);
 	}
 	
 	@ApiOperation(value = "Busca cliente por identificador (ID).",
@@ -65,8 +68,9 @@ public class ClienteController {
 		@ApiResponse(code = 400, message = "Requisição inválida."),
 		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@GetMapping("/{id}")
-	public ResponseEntity<ClienteDTO> buscaCliente(@PathVariable Long id){
-		return ResponseEntity.ok(clienteService.buscaPorId(id));
+	@ResponseStatus(value = HttpStatus.OK)
+	public ClienteDTO buscaCliente(@PathVariable Long id){
+		return clienteService.buscaPorId(id);
 	}
 	
 	@ApiOperation(value = "Busca cliente por nome.",
@@ -80,8 +84,9 @@ public class ClienteController {
 		@ApiResponse(code = 200, message = "Resultado da busca encontrado.", response = Object.class),
 		@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@GetMapping
-	public ResponseEntity<List<ClienteDTO>> buscaCliente(@RequestParam(required = true) String nome){
-		return ResponseEntity.ok(clienteService.buscaPorNome(nome));
+	@ResponseStatus(value = HttpStatus.OK)
+	public List<ClienteDTO> buscaCliente(@RequestParam(required = true) String nome){
+		return clienteService.buscaPorNome(nome);
 	}
 	
 	@ApiOperation(value = "Remove cliente", notes = "Remove o cliente com Id especificado.")

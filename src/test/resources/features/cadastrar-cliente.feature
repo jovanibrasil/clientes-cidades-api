@@ -10,7 +10,6 @@ Funcionalidade: Cadastrar cliente
 		| nomeCompleto 	| dataNascimento 	| sexo | cidadeId |
 		| Jovani Brasil | 13/06/1992			| M		 | {idCidadeCadasreada} |
 		Então é retornado código 201 como resultado da operação
-		E o corpo da mensagem é vazio
 		E possui o endereço do recurso no cabeçalho
 
 	Cenário: Cadastrar um cliente referenciando cidade não existente
