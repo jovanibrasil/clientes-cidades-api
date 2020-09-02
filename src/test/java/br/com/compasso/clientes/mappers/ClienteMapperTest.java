@@ -25,6 +25,7 @@ import br.com.compasso.clientes.exception.InvalidParameterException;
 import br.com.compasso.clientes.exception.NotFoundException;
 import br.com.compasso.clientes.mapper.ClienteMapperImpl;
 import br.com.compasso.clientes.service.CidadeService;
+import br.com.compasso.clientes.util.DateUtils;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -61,10 +62,10 @@ class ClienteMapperTest {
 		when(cidadeService.buscaPorId(CIDADE_ID)).thenReturn(cidade);
 		
 		ClienteForm clienteForm = new ClienteForm();
-		clienteForm.setCidadeId(cliente.getCidade().getId());
-		clienteForm.setDataNascimento(cliente.getDataNascimento());
-		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
-		clienteForm.setSexo(cliente.getSexo());
+		clienteForm.setCidadeId(cliente.getCidade().getId().toString());
+		clienteForm.setDataNascimento(DateUtils.converteLocalDateToString(cliente.getDataNascimento()));
+		clienteForm.setNomeCompleto(cliente.getNomeCompleto().toString());
+		clienteForm.setSexo(cliente.getSexo().toString());
 		
 		Cliente clienteMapeado = clienteMapper.clienteFormToCliente(clienteForm);
 		assertEquals(cliente.getCidade(), clienteMapeado.getCidade());
@@ -80,10 +81,10 @@ class ClienteMapperTest {
 		when(cidadeService.buscaPorId(cidadeId )).thenThrow(NotFoundException.class);
 		
 		ClienteForm clienteForm = new ClienteForm();
-		clienteForm.setCidadeId(cidadeId);
-		clienteForm.setDataNascimento(cliente.getDataNascimento());
-		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
-		clienteForm.setSexo(cliente.getSexo());
+		clienteForm.setCidadeId(cidadeId.toString());
+		clienteForm.setDataNascimento(DateUtils.converteLocalDateToString(cliente.getDataNascimento()));
+		clienteForm.setNomeCompleto(cliente.getNomeCompleto().toString());
+		clienteForm.setSexo(cliente.getSexo().toString());
 		
 		assertThrows(InvalidParameterException.class, () -> {
 			clienteMapper.clienteFormToCliente(clienteForm);

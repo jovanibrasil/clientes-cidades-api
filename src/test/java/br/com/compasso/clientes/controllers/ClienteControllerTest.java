@@ -35,6 +35,7 @@ import br.com.compasso.clientes.dominio.form.ClienteForm;
 import br.com.compasso.clientes.exception.InvalidParameterException;
 import br.com.compasso.clientes.exception.NotFoundException;
 import br.com.compasso.clientes.service.ClienteService;
+import br.com.compasso.clientes.util.DateUtils;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -97,7 +98,7 @@ class ClienteControllerTest {
 	 */
 	@Test
 	void salvaCliente_QuandoNascimentoNoFuturo_EsperaBadRequest() throws Exception {
-		clienteForm.setDataNascimento(LocalDate.now().plusYears(5));
+		clienteForm.setDataNascimento(DateUtils.converteLocalDateToString(LocalDate.now().plusYears(5)));
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(clienteForm)))		

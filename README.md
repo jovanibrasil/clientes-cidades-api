@@ -62,7 +62,7 @@ Requisitos Obrigatórios:
 * Código válido, estruturado e organizado para que possamos testar sua aplicação
 * Testes unitários e de integração
 
-Utilização de Java11, spring boot, maven, suporte às IDEs IntelliJ e Eclipse o resto é por sua conta escolher.
+Utilização de Java 8, spring boot, maven, suporte às IDEs IntelliJ e Eclipse o resto é por sua conta escolher.
 
 Dicas:
 * Procure fazer uma entrega simples mas consistente, usando a experiência e conhecimento adquiridos durante sua carreira;

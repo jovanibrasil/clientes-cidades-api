@@ -41,7 +41,8 @@ public class ClienteController {
 	@ApiOperation(value = "Cria cliente.", notes = "Cria um cliente no sistema. ")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "Criado com sucesso.", response = ClienteDTO.class),
-			@ApiResponse(code = 400, message = "Requisição inválida.")})
+			@ApiResponse(code = 400, message = "Erros ne sintaxe nos dados recebidos."),
+			@ApiResponse(code = 422, message = "Não existe cidade com o Id informado.")})
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ClienteDTO salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {

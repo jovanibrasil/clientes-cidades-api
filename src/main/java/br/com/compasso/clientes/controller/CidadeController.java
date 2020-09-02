@@ -37,7 +37,8 @@ public class CidadeController {
 	@ApiOperation(value = "Cria uma cidade.", notes = "Cria uma cidade no sistema. Não existem cidades com mesmo nome em um mesmo estado.")
 	@ApiResponses({
 		@ApiResponse(code = 201, message = "Cidade criada com sucesso.", response = CidadeDTO.class),
-		@ApiResponse(code = 400, message = "Estado não encontrado.")})
+		@ApiResponse(code = 400, message = "Erros ne sintaxe nos dados recebidos."),
+		@ApiResponse(code = 422, message = "Estado informado não foi encontrado.")})
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeDTO criaCidade(@RequestBody @Valid CidadeForm cidadeForm) {

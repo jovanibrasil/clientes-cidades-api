@@ -5,10 +5,12 @@ import org.springframework.stereotype.Component;
 import br.com.compasso.clientes.dominio.Cidade;
 import br.com.compasso.clientes.dominio.Cliente;
 import br.com.compasso.clientes.dominio.dto.ClienteDTO;
+import br.com.compasso.clientes.dominio.enumeration.Sexo;
 import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
 import br.com.compasso.clientes.dominio.form.ClienteForm;
 import br.com.compasso.clientes.exception.InvalidParameterException;
 import br.com.compasso.clientes.service.CidadeService;
+import br.com.compasso.clientes.util.DateUtils;
 
 @Component
 public class ClienteMapperImpl implements ClienteMapper {
@@ -28,15 +30,15 @@ public class ClienteMapperImpl implements ClienteMapper {
 		Cliente cliente = new Cliente();
 
 		cliente.setNomeCompleto(clienteForm.getNomeCompleto());
-		cliente.setDataNascimento(clienteForm.getDataNascimento());
-		cliente.setSexo(clienteForm.getSexo());
+		cliente.setDataNascimento(DateUtils.converteStringToLocalDate(clienteForm.getDataNascimento()));
+		cliente.setSexo(Sexo.valueOf(clienteForm.getSexo()));
 
 		try {
-			Cidade cidade = cidadeService.buscaPorId(clienteForm.getCidadeId());
+			Cidade cidade = cidadeService.buscaPorId(Long.valueOf(clienteForm.getCidadeId()));
 			cliente.setCidade(cidade);
 			return cliente;
 		} catch (Exception e) {
-			throw new InvalidParameterException("Id da cidade é inválido.");
+			throw new InvalidParameterException("Id da cidade é inválido. Não existe cidade com o Id informado");
 		}
 	}
 

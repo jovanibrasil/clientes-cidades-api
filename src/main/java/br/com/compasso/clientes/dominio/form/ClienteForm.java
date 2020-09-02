@@ -1,15 +1,13 @@
 package br.com.compasso.clientes.dominio.form;
 
-import java.time.LocalDate;
-
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import br.com.compasso.clientes.dominio.enumeration.Sexo;
+import br.com.compasso.clientes.validator.EnumValidator;
+import br.com.compasso.clientes.validator.DateValidAndBeforeValidator;
 import io.swagger.annotations.ApiModelProperty;
 
 
@@ -21,17 +19,18 @@ public class ClienteForm {
 	private String nomeCompleto;
 	
 	@NotNull(message = "Data de nascimento não pode ser nula.")
-	@Past(message = "Data de nascimento deve ser anterior a data atual.")
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@DateValidAndBeforeValidator(message = "Data deve ter formato válido e estar no passado.")
 	@ApiModelProperty(required = true, example = "13/06/1992")
-	private LocalDate dataNascimento;
+	private String dataNascimento;
 	
 	@NotNull(message = "Sexo do cliente não pode ser nulo.")
+	@EnumValidator(enumClass = Sexo.class, message = "Sexo deve ser um enum válido.")
 	@ApiModelProperty(required = true, example = "M")
-	private Sexo sexo;
+	private String sexo;
 	
+	@Digits(fraction = 0, integer = 5, message = "Identificador de cidade deve ser um número válido")
 	@NotNull(message = "Identificador da cidade não pode ser nulo.")
-	private Long cidadeId;
+	private String cidadeId;
 
 	public String getNomeCompleto() {
 		return nomeCompleto;
@@ -41,27 +40,27 @@ public class ClienteForm {
 		this.nomeCompleto = nomeCompleto;
 	}
 
-	public LocalDate getDataNascimento() {
+	public String getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(LocalDate dataNascimento) {
+	public void setDataNascimento(String dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public Sexo getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(Sexo sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 
-	public Long getCidadeId() {
+	public String getCidadeId() {
 		return cidadeId;
 	}
 
-	public void setCidadeId(Long cidadeId) {
+	public void setCidadeId(String cidadeId) {
 		this.cidadeId = cidadeId;
 	}
 	

@@ -148,6 +148,8 @@
 						<exclude>br/com/compasso/clientes/modelos/*/**</exclude>
 						<exclude>br/com/compasso/clientes/exceptions/*/**</exclude>
 						<exclude>br/com/compasso/clientes/config/*/**</exclude>
+						<exclude>br/com/compasso/clientes/util/*/**</exclude>
+						<exclude>br/com/compasso/clientes/validator/*/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
