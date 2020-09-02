@@ -10,7 +10,7 @@ import javax.validation.Payload;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DateValidAndBeforeImpl.class)
+@Constraint(validatedBy = DateValidAndBeforeValidatorImpl.class)
 public @interface DateValidAndBeforeValidator {
 	String message() default "Data deve ter um formato válido";
 	Class<?>[] groups() default {};
