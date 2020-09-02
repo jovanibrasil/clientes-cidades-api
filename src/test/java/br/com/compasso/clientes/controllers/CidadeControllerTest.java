@@ -97,9 +97,9 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void buscaCidade_QuandoSemParametros_EsperaBadRequest() throws Exception {
+	void buscaCidade_QuandoSemParametros_EsperaOk() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/cidades"))		
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isOk());
 	}
 	
 	/**
@@ -109,7 +109,7 @@ class CidadeControllerTest {
 	 */
 	@Test
 	void buscaCidade_QuandoExisteComNome_EsperaOk() throws Exception {
-		when(cidadeService.buscaPorNome(cidadeForm.getNome())).thenReturn(Arrays.asList(cidadeDto));
+		when(cidadeService.buscaPorNomeCidadeESiglaEstado(cidadeForm.getNome(), "")).thenReturn(Arrays.asList(cidadeDto));
 		mvc.perform(MockMvcRequestBuilders.get("/cidades?nome=" + cidadeForm.getNome())
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isOk());
@@ -122,7 +122,7 @@ class CidadeControllerTest {
 	 */
 	@Test
 	void buscaCidade_QuandoNaoExistentePorNome_EsperaNotFound() throws Exception {
-		when(cidadeService.buscaPorNome(cidadeForm.getNome())).thenThrow(NotFoundException.class);
+		when(cidadeService.buscaPorNomeCidadeESiglaEstado(cidadeForm.getNome(), "")).thenThrow(NotFoundException.class);
 		mvc.perform(MockMvcRequestBuilders.get("/cidades/" + cidadeForm.getNome())
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isNotFound());
@@ -136,7 +136,7 @@ class CidadeControllerTest {
 	@Test
 	void buscaCidade_QuandoExistePorEstado_EsperaOk() throws Exception {
 		String sigla = cidadeForm.getEstadoSigla();
-		when(cidadeService.buscaPorEstado(sigla)).thenReturn(Arrays.asList(cidadeDto));
+		when(cidadeService.buscaPorNomeCidadeESiglaEstado("", sigla)).thenReturn(Arrays.asList(cidadeDto));
 		mvc.perform(MockMvcRequestBuilders.get("/cidades?estadoSigla=" + sigla)
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isOk());
@@ -150,7 +150,7 @@ class CidadeControllerTest {
 	@Test
 	void buscaCidade_QuandoEstadoInvalido_EsperaOk() throws Exception {
 		String sigla = "??";
-		when(cidadeService.buscaPorEstado(sigla)).thenReturn(Arrays.asList());
+		when(cidadeService.buscaPorNomeCidadeESiglaEstado("", sigla)).thenReturn(Arrays.asList());
 		mvc.perform(MockMvcRequestBuilders.get("/cidades?estadoSigla=" + sigla)
 				.contentType(MediaType.APPLICATION_JSON))		
 				.andExpect(status().isOk());

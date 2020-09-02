@@ -15,4 +15,3 @@ Funcionalidade: Buscar cidade por estado
 		Dado que não existe uma cidade no estado "AM"
 		Quando é feito um GET para "/cidades" com parâmetro "estadoSigla" com valor "AM" 
 		Então é retornado código 200 como resultado da operação
-		E o corpo da mensagem não contém objetos

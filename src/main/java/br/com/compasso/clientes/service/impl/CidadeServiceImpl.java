@@ -1,5 +1,6 @@
 package br.com.compasso.clientes.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,21 +27,7 @@ public class CidadeServiceImpl implements CidadeService {
 	public CidadeServiceImpl(CidadeRepository cidadeRepository, CidadeMapper cidadeMapper) {
 		this.cidadeRepository = cidadeRepository;
 		this.cidadeMapper = cidadeMapper;
-	}
-
-	/**
-	 * Busca cidade por nome. A busca é feita considerando uma comparação
-	 * total no nome buscado.
-	 * 
-	 * @param nome da cidade que se quer buscar
-	 */
-	@Transactional
-	@Override
-	public List<CidadeDTO> buscaPorNome(String nomeCidade) {
-		return cidadeRepository.findByNomeIgnoreCase(nomeCidade).stream()
-				.map(cidadeMapper::cidadeToCidadeDto)
-				.collect(Collectors.toList());
-	}
+	}	
 
 	/**
 	 * Busca uma cidade pelo ID especificado.
@@ -50,13 +37,6 @@ public class CidadeServiceImpl implements CidadeService {
 	public Cidade buscaPorId(Long cidadeId) {
 		return cidadeRepository.findById(cidadeId).orElseThrow(() -> 
 			new NotFoundException(Messages.CIDADE_NAO_ENCONTRADA + cidadeId));
-	}
-
-	@Override
-	public List<CidadeDTO> buscaPorEstado(String estadoSigla) {
-		return cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla).stream()
-				.map(cidadeMapper::cidadeToCidadeDto)
-				.collect(Collectors.toList());
 	}
 
 	/**
@@ -74,6 +54,35 @@ public class CidadeServiceImpl implements CidadeService {
 				throw new InvalidParameterException(Messages.CIDADE_JA_CADASTRADA + cidadeForm.getNome()); 
 			});
 		return cidadeMapper.cidadeToCidadeDto(cidadeRepository.save(cidade));
+	}
+
+	/**
+	 * Busca cidade por nome, por sigla de estado ou por ambos. A busca é feita considerando 
+	 * uma comparação total dos nomes buscados.
+	 * 
+	 * @param nomeCidade nome da cidade que se quer buscar
+	 * @param estadoSigla nome no estado que se quer buscar
+	 */
+	@Override
+	public List<CidadeDTO> buscaPorNomeCidadeESiglaEstado(String nomeCidade, String estadoSigla) {
+		
+		List<Cidade> cidades = new ArrayList<>();
+		
+		if(!nomeCidade.isBlank() && !estadoSigla.isBlank()) {
+			cidadeRepository
+				.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(nomeCidade, estadoSigla)
+				.ifPresent(cidades::add);
+		} else {
+			if(!nomeCidade.isBlank()) {
+				cidades = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
+			} else if(!estadoSigla.isBlank()) {
+				cidades = cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla);
+			} 
+		}
+		
+		return cidades.stream()
+					.map(cidadeMapper::cidadeToCidadeDto)
+					.collect(Collectors.toList());
 	}
 	
 }

@@ -10,8 +10,7 @@ import br.com.compasso.clientes.dominio.form.CidadeForm;
 public interface CidadeService {
 	
 	CidadeDTO salvaCidade(CidadeForm cidadeForm);
-	List<CidadeDTO> buscaPorNome(String nomeCidade);
 	Cidade buscaPorId(Long cidadeId);
-	List<CidadeDTO> buscaPorEstado(String estadoSigla);
+	List<CidadeDTO> buscaPorNomeCidadeESiglaEstado(String nome, String estadoSigla);
 
 }

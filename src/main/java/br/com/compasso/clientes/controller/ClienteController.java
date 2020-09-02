@@ -1,6 +1,5 @@
 package br.com.compasso.clientes.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,7 +7,6 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.compasso.clientes.dominio.dto.ClienteDTO;
 import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
@@ -28,7 +25,6 @@ import br.com.compasso.clientes.service.ClienteService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ResponseHeader;
 
 @RestController
 @RequestMapping("/clientes")
@@ -44,27 +40,19 @@ public class ClienteController {
 
 	@ApiOperation(value = "Cria cliente.", notes = "Cria um cliente no sistema. ")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "Criado com sucesso.", 
-					response = Object.class,
-					responseHeaders = { @ResponseHeader(name = "location", response = URI.class)}),
+			@ApiResponse(code = 201, message = "Criado com sucesso.", response = ClienteDTO.class),
 			@ApiResponse(code = 400, message = "Requisição inválida.")})
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<ClienteDTO> salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
+	public ClienteDTO salvaCliente(@RequestBody @Valid ClienteForm clienteForm) {
 		log.info("Criando cliente {}", clienteForm.getNomeCompleto());
-		ClienteDTO clienteSalvo = clienteService.salvaCliente(clienteForm);
-		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{clienteId}")
-				.buildAndExpand(clienteSalvo.getId())
-				.toUri();
-		return ResponseEntity.created(uri).body(clienteSalvo);
+		return clienteService.salvaCliente(clienteForm);
 	}
 	
 	@ApiOperation(value = "Busca cliente por identificador (ID).",
 			notes = "Realiza a busca de um cliente pelo id definido")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "Cliente encontrado.", response = Object.class),
+		@ApiResponse(code = 200, message = "Cliente encontrado.", response = ClienteDTO.class),
 		@ApiResponse(code = 400, message = "Requisição inválida."),
 		@ApiResponse(code = 404, message = "Cliente não encontrado.")})
 	@GetMapping("/{id}")

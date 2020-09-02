@@ -15,4 +15,3 @@ Funcionalidade: Buscar cidade por nome
 		Dado que não existe uma cidade "Triunfo" cadastrada
 		Quando é feito um GET para "/cidades" com parâmetro "nome" com valor "Triunfo"
 		Então é retornado código 200 como resultado da operação
-		E o corpo da mensagem não contém objetos
