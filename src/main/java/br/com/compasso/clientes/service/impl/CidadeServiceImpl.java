@@ -68,14 +68,14 @@ public class CidadeServiceImpl implements CidadeService {
 		
 		List<Cidade> cidades = new ArrayList<>();
 		
-		if(!nomeCidade.isBlank() && !estadoSigla.isBlank()) {
+		if(!nomeCidade.isEmpty() && !estadoSigla.isEmpty()) {
 			cidadeRepository
 				.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(nomeCidade, estadoSigla)
 				.ifPresent(cidades::add);
 		} else {
-			if(!nomeCidade.isBlank()) {
+			if(!nomeCidade.isEmpty()) {
 				cidades = cidadeRepository.findByNomeIgnoreCase(nomeCidade);
-			} else if(!estadoSigla.isBlank()) {
+			} else if(!estadoSigla.isEmpty()) {
 				cidades = cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla);
 			} 
 		}
