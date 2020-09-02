@@ -83,12 +83,12 @@ class CidadeControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void criaCidade_QuandoJaExistente_EsperaBadRequest() throws Exception {
+	void criaCidade_QuandoJaExistente_EsperaUnprocessableEntity() throws Exception {
 		when(cidadeService.salvaCidade(any())).thenThrow(InvalidParameterException.class);
 		mvc.perform(MockMvcRequestBuilders.post("/cidades")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(cidadeForm)))		
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isUnprocessableEntity());
 	}
 
 	/**

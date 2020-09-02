@@ -16,5 +16,5 @@ Funcionalidade: Cadastrar cidade
 		Quando é feito um POST para "/cidades" com a cidade no corpo 
 			| nomeCidade 		| estadoSigla |
 			| Porto Alegre	| XX 					|
-		Então é retornado código 400 como resultado da operação
+		Então é retornado código 422 como resultado da operação
 		E o corpo da mensagem contém informações de erro

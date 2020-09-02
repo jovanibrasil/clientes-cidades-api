@@ -83,12 +83,12 @@ class ClienteControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	void salvaCliente_QuandoCidadeNaoExistente_EsperaBadRequest() throws Exception {
+	void salvaCliente_QuandoCidadeNaoExistente_EsperaUnprocessableEntity() throws Exception {
 		when(clienteService.salvaCliente(any())).thenThrow(InvalidParameterException.class);
 		mvc.perform(MockMvcRequestBuilders.post("/clientes")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(clienteForm)))		
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isUnprocessableEntity());
 	}
 	
 	/**
