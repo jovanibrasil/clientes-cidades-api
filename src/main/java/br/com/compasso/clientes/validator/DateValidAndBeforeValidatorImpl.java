@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import br.com.compasso.clientes.util.DateUtils;
 
-public class DateValidAndBeforeImpl implements ConstraintValidator<DateValidAndBeforeValidator, String> {
+public class DateValidAndBeforeValidatorImpl implements ConstraintValidator<DateValidAndBeforeValidator, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {

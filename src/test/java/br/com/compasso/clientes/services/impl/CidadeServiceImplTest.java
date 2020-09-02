@@ -152,6 +152,20 @@ class CidadeServiceImplTest {
 		List<CidadeDTO> cidadeSalva = cidadeService.buscaPorNomeCidadeESiglaEstado(cidade.getNome(), "");
 		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
 	}
+	
+	/**
+	 * Busca por nome e sigla do estado e retorno é uma cidade existente.
+	 * 
+	 */
+	@Test
+	void buscaPorNome_QuandoExisteCidadeComNomeNoEstado_EsperaRetornoCidade() {
+		when(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase(cidade.getNome(),
+				cidade.getEstado().getSigla())).thenReturn(Optional.of(cidade));	
+		List<CidadeDTO> cidadeSalva = cidadeService
+				.buscaPorNomeCidadeESiglaEstado(cidade.getNome(), cidade.getEstado().getSigla());
+		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
+		assertEquals(cidade.getEstado().getSigla(), cidadeSalva.get(0).getEstadoSigla());
+	}
 		
 	/**
 	 * Busca por nome uma cidade não existente no sistema.

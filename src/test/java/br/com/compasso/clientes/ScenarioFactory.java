@@ -49,6 +49,7 @@ public class ScenarioFactory {
 		CidadeDTO cidadeDto = new CidadeDTO();
 		cidadeDto.setId(cidade.getId());
 		cidadeDto.setNome(cidade.getNome());
+		cidadeDto.setEstadoSigla(cidade.getEstado().getSigla());
 		return cidadeDto;
 	}
 	
