@@ -83,13 +83,10 @@ public class ClienteServiceImpl implements ClienteService {
 	@Transactional
 	@Override
 	public void removeCliente(Long clienteId) {
-		clienteRepository.findById(clienteId)
-			.ifPresentOrElse(
-					clienteRepository::delete,
-					() -> { 
-						throw new NotFoundException(Messages.USUARIO_NAO_ENCONTRADO + clienteId); 
-					}
-			);
+		Cliente cliente = clienteRepository
+				.findById(clienteId)
+				.orElseThrow(() -> new NotFoundException(Messages.USUARIO_NAO_ENCONTRADO + clienteId));
+		clienteRepository.delete(cliente);
 	}
 	
 }

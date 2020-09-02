@@ -11,6 +11,7 @@ import br.com.compasso.clientes.dominio.enumeration.Sexo;
 import br.com.compasso.clientes.dominio.form.AtualizacaoClienteForm;
 import br.com.compasso.clientes.dominio.form.CidadeForm;
 import br.com.compasso.clientes.dominio.form.ClienteForm;
+import br.com.compasso.clientes.util.DateUtils;
 
 public class ScenarioFactory {
 	
@@ -106,9 +107,9 @@ public class ScenarioFactory {
 	public static ClienteForm criaClienteFormJoao() {
 		Cliente cliente = criaClienteJoao();
 		ClienteForm clienteForm = new ClienteForm();
-		clienteForm.setCidadeId(cliente.getCidade().getId());
-		clienteForm.setDataNascimento(cliente.getDataNascimento());
-		clienteForm.setSexo(cliente.getSexo());
+		clienteForm.setCidadeId(cliente.getCidade().getId().toString());
+		clienteForm.setDataNascimento(DateUtils.converteLocalDateToString(cliente.getDataNascimento()));
+		clienteForm.setSexo(cliente.getSexo().toString());
 		clienteForm.setNomeCompleto(cliente.getNomeCompleto());
 		return clienteForm;
 	}

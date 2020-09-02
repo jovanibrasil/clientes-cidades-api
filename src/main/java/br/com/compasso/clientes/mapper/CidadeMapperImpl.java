@@ -47,7 +47,7 @@ public class CidadeMapperImpl implements CidadeMapper {
 		
 		Optional<Estado> estado = estadoRepository.findBySigla(cidadeForm.getEstadoSigla());
 		
-		if(estado.isEmpty()) {
+		if(!estado.isPresent()) {
 			throw new InvalidParameterException("Estado " + cidadeForm.getEstadoSigla() + " não encontrado.");
 		}
 		

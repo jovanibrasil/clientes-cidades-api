@@ -123,7 +123,7 @@ class CidadeRepositoryTest {
 	void findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase_QuandoEstadoNaoExiste_EsperaOptionalVazio() {
 		cidadeRepository.save(cidade1);
 		cidadeRepository.save(cidade2);
-		assertTrue(cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase("Sampa", "SP").isEmpty());
+		assertTrue(!cidadeRepository.findByNomeIgnoreCaseAndEstadoSiglaIgnoreCase("Sampa", "SP").isPresent());
 	}
 	
 }

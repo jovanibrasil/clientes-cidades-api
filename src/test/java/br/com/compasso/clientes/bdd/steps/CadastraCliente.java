@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter;
 import br.com.compasso.clientes.ScenarioFactory;
 import br.com.compasso.clientes.dominio.Cidade;
 import br.com.compasso.clientes.dominio.Estado;
-import br.com.compasso.clientes.dominio.enumeration.Sexo;
 import br.com.compasso.clientes.dominio.form.ClienteForm;
+import br.com.compasso.clientes.util.DateUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Quando;
@@ -30,9 +30,9 @@ public class CadastraCliente extends SpringIntegrationTest {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate date = LocalDate.parse(dataTable.row(1).get(1), formatter);
-		clienteForm.setDataNascimento(date);
-		clienteForm.setSexo(Sexo.valueOf(dataTable.row(1).get(2)));
-		clienteForm.setCidadeId(((Cidade) estadoCompartilhado.getObject()).getId());
+		clienteForm.setDataNascimento(DateUtils.converteLocalDateToString(date));
+		clienteForm.setSexo(dataTable.row(1).get(2));
+		clienteForm.setCidadeId(((Cidade) estadoCompartilhado.getObject()).getId().toString());
 		
 		post(endpoint, clienteForm);
 	}

@@ -89,27 +89,6 @@ class CidadeServiceImplTest {
 	}
 	
 	/**
-	 * Busca por nome uma cidade existente no sistema.
-	 * 
-	 */
-	@Test
-	void buscaPorNome_QuandoExisteCidadeComNome_EsperaRetornoCidade() {
-		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList(cidade));	
-		List<CidadeDTO> cidadeSalva = cidadeService.buscaPorNome(cidade.getNome());
-		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
-	}
-		
-	/**
-	 * Busca por nome uma cidade não existente no sistema.
-	 * 
-	 */
-	@Test
-	void buscaPorNome_QuandoNaoExisteCidadeComNome_EsperaRetornoListaVazia() {
-		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList());	
-		assertEquals(0, cidadeService.buscaPorNome(cidade.getNome()).size());
-	}
-	
-	/**
 	 * Busca por id de uma cidade existente no sistema.
 	 * 
 	 */
@@ -140,7 +119,7 @@ class CidadeServiceImplTest {
 	void buscaPorEstado_QuandoEstadoPossuiUmaCidade_EsperaListaComUmaCidade() {
 		String estadoSigla = cidade.getEstado().getSigla();
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList(cidade));	
-		assertEquals(1, cidadeService.buscaPorEstado(estadoSigla).size());
+		assertEquals(1, cidadeService.buscaPorNomeCidadeESiglaEstado("", estadoSigla).size());
 	}
 	
 	/**
@@ -150,7 +129,7 @@ class CidadeServiceImplTest {
 	void buscaPorEstado_QuandoEstadoNaoExiste_EsperaListaVazia() {
 		String estadoSigla = "??";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
-		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());
+		assertEquals(0, cidadeService.buscaPorNomeCidadeESiglaEstado("", estadoSigla).size());
 	}
 	
 	/**
@@ -160,7 +139,28 @@ class CidadeServiceImplTest {
 	void buscaPorEstado_QuandoEstadoNaoTemCidadesCadastradas_EsperaListaVazia() {
 		String estadoSigla = "AM";
 		when(cidadeRepository.findByEstadoSiglaIgnoreCase(estadoSigla)).thenReturn(Arrays.asList());	
-		assertEquals(0, cidadeService.buscaPorEstado(estadoSigla).size());	
+		assertEquals(0, cidadeService.buscaPorNomeCidadeESiglaEstado("", estadoSigla).size());	
+	}
+	
+	/**
+	 * Busca por nome uma cidade existente no sistema.
+	 * 
+	 */
+	@Test
+	void buscaPorNome_QuandoExisteCidadeComNome_EsperaRetornoCidade() {
+		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList(cidade));	
+		List<CidadeDTO> cidadeSalva = cidadeService.buscaPorNomeCidadeESiglaEstado(cidade.getNome(), "");
+		assertEquals(cidade.getNome(), cidadeSalva.get(0).getNome());
+	}
+		
+	/**
+	 * Busca por nome uma cidade não existente no sistema.
+	 * 
+	 */
+	@Test
+	void buscaPorNome_QuandoNaoExisteCidadeComNome_EsperaRetornoListaVazia() {
+		when(cidadeRepository.findByNomeIgnoreCase(cidade.getNome())).thenReturn(Arrays.asList());	
+		assertEquals(0, cidadeService.buscaPorNomeCidadeESiglaEstado(cidade.getNome(), "").size());
 	}
 	
 }

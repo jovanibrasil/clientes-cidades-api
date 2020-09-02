@@ -53,7 +53,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				.build();
 	}
 	
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler({ InvalidParameterException.class })
 	public DetalheErro<String> handleInvalidParameter(Exception exception) {
 
@@ -62,7 +62,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return new DetalheErro.Builder<String>()
 				.message(message)
-				.code(HttpStatus.BAD_REQUEST.value())
+				.code(HttpStatus.UNPROCESSABLE_ENTITY.value())
 				.build();
 	}
 	
